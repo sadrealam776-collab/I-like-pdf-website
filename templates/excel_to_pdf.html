@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Excel to PDF | I Like PDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* AURORA THEME */
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 0;
+        }
+        @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.4);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        }
+
+        h1 { margin-bottom: 0.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        p { color: #f1f5f9; margin-bottom: 2rem; }
+
+        .file-upload {
+            border: 2px dashed rgba(255,255,255,0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: 0.3s;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+        }
+        .file-upload:hover { background: rgba(255,255,255,0.2); border-color: white; }
+
+        button {
+            background: white;
+            color: #10b981; /* Excel Green */
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+
+        .back-link { display: inline-block; margin-top: 20px; color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Excel to PDF</h1>
+        <p>Convert .xlsx spreadsheets to PDF tables.</p>
+        
+        <form action="/api/excel-to-pdf" method="post" enctype="multipart/form-data">
+            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                <span style="font-size: 2rem;">??</span><br>
+                <span id="fileName">Click to Select Excel</span>
+                <input type="file" id="fileInput" name="file" accept=".xlsx,.xls" required style="display:none;">
+            </div>
+            
+            <button type="submit">Convert Now</button>
+        </form>
+
+        <a href="/" class="back-link">? Back to Tools</a>
+    </div>
+<div style="max-width: 800px; margin: 50px auto; color: #f1f5f9; text-align: left; line-height: 1.6;">
+    <h2>How to convert excel to PDF Files for Free?</h2>
+    <p>Combining multiple PDF documents into one file is easy with <strong>I Like PDF</strong>. Follow these steps:</p>
+    <ol>
+        <li>Click the <strong>Select PDF</strong> button above.</li>
+        <li>Choose the files you want to combine from your device.</li>
+        <li>Our <strong>AI PDF Merger</strong> will stitch them together instantly.</li>
+        <li>Download your new single document.</li>
+    </ol>
+    
+    <h3>Why use our PDF Merger?</h3>
+    <ul>
+        <li><strong>100% Secure:</strong> Files are processed locally or deleted immediately.</li>
+        <li><strong>No Watermarks:</strong> Completely free for professional use.</li>
+        <li><strong>Works on Mobile:</strong> convert excel to PDFs on Android, iPhone, or Windows.</li>
+    </ul>
+</div>
+
+    <script>
+        document.getElementById('fileInput').onchange = function () {
+            if(this.files && this.files.length > 0) {
+                document.getElementById('fileName').innerText = this.files[0].name + " ?";
+            }
+        };
+    </script>
+</body>
+</html>

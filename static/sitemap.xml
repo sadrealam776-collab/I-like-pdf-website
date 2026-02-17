@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/</loc>
+      <priority>1.0</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/merge-pdf</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/split-pdf</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/pdf-to-word</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/jpg-to-pdf</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/compress-pdf</loc>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://ilikepdf-tool.onrender.com/excel-to-pdf</loc>
+      <priority>0.8</priority>
+   </url>
+</urlset>

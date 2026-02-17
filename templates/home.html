@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="PmzPKllIbi44i-hkoQbTMByuD9JfWb8qu2bVbkHZO64" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Like PDF | Free Online PDF Tools</title>
+    
+    <meta name="description" content="I Like PDF is your free all-in-one PDF workspace. Convert PDF to Word, Merge, Excel to PDF, and Split PDF pages. Fast, secure, and AI-powered.">
+    <meta name="keywords" content="i like pdf, pdf to word, split pdf, merge pdf, excel to pdf, free pdf converter, separate pdf pages">
+    <meta name="author" content="I Like PDF">
+    <meta name="robots" content="index, follow">
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Grotesk:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* --- COLOR PALETTE --- */
+            --glass-bg: rgba(255, 255, 255, 0.25); /* More transparent for colorful bg */
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-main: #ffffff; 
+            --text-muted: #f1f5f9;
+            --primary: #ef4444; /* Heart Red */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            /* Fallback color */
+            background: #23a6d5; 
+        }
+
+        /* --- MIXED COLOR ANIMATED BACKGROUND --- */
+        #color-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -2;
+            /* Mixing Red, Pink, Blue, and Teal */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- PARTICLE CANVAS (Now High Visibility) --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            padding: 100px 20px 60px;
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideDown 1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .heart-icon {
+            color: white;
+            animation: heartbeat 1.5s infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        p.subtitle {
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* --- TOOL GRID --- */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 40px 100px;
+            z-index: 2;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px); /* Less blur to show colors behind */
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.4);
+            border-color: white;
+            box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-box {
+            font-size: 2.5rem;
+            color: white;
+            background: rgba(255,255,255,0.2);
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+
+        .card:hover .icon-box {
+            background: white;
+            color: #e73c7e; /* Pink from background */
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 20px white;
+            border-color: white;
+        }
+
+        .card h3 { color: white; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card p { color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+        .badge {
+            position: absolute; top: 15px; right: 15px;
+            background: white; color: #e73c7e;
+            font-size: 0.7rem; font-weight: 800;
+            padding: 5px 12px; border-radius: 20px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* --- SEO CONTENT --- */
+        .seo-hidden {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0); border: 0;
+        }
+
+        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        @media (max-width: 768px) { h1 { font-size: 3rem; } }
+    </style>
+</head>
+<body>
+
+    <div id="color-bg"></div>
+    
+    <canvas id="particle-canvas"></canvas>
+
+    <header>
+        <h1>I <i class="fa-solid fa-heart heart-icon"></i> PDF</h1>
+        <p class="subtitle">Fast, Colorful, and Free. The only PDF workspace you'll ever need.</p>
+    </header>
+
+    <div class="tool-grid">
+        
+        <a href="/pdf-to-word" class="card">
+            <span class="badge">AI Powered</span>
+            <div class="icon-box"><i class="fa-solid fa-file-word"></i></div>
+            <h3>PDF to Word</h3>
+            <p>Convert PDF to Editable Word (Docx) with high accuracy.</p>
+        </a>
+
+        <a href="/merge-pdf" class="card">
+            <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div>
+            <h3>Merge PDF</h3>
+            <p>Combine multiple PDF files into one organized document.</p>
+        </a>
+
+        <a href="/excel-to-pdf" class="card">
+            <div class="icon-box"><i class="fa-solid fa-file-excel"></i></div>
+            <h3>Excel to PDF</h3>
+            <p>Convert Excel spreadsheets (.xlsx) to PDF tables instantly.</p>
+        </a>
+
+        <a href="/jpg-to-pdf" class="card">
+            <div class="icon-box"><i class="fa-solid fa-image"></i></div>
+            <h3>JPG to PDF</h3>
+            <p>Convert Images (JPG, PNG) to a single professional PDF.</p>
+        </a>
+
+        <a href="/compress-pdf" class="card">
+            <div class="icon-box"><i class="fa-solid fa-compress"></i></div>
+            <h3>Compress PDF</h3>
+            <p>Reduce file size by up to 80% for email and web upload.</p>
+        </a>
+
+        <a href="/split-pdf" class="card">
+            <span class="badge">Essential</span>
+            <div class="icon-box"><i class="fa-solid fa-scissors"></i></div>
+            <h3>Split PDF</h3>
+            <p>Extract pages or split a document into several smaller files.</p>
+        </a>
+
+    </div>
+
+    <div class="seo-hidden">
+        <h2>I Like PDF - Colorful Free PDF Tools</h2>
+        <p>I Like PDF is a vibrant, free online tool to Merge, Split, and Convert PDFs. Use our AI PDF to Word converter or Compress PDF tool.</p>
+    </div>
+
+    <script>
+        /* HIGH VISIBILITY ANIMATION SCRIPT */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                // INCREASED SIZE (Was 2, now 6)
+                this.size = Math.random() * 5 + 2; 
+                // INCREASED SPEED (Was 0.5, now 1.0)
+                this.speedX = (Math.random() * 1.5) - 0.75;
+                this.speedY = (Math.random() * 1.5) - 0.75;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX;
+                if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY;
+            }
+            draw() {
+                // BRIGHT WHITE with High Opacity
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            // MORE PARTICLES
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+                for (let j = i; j < particlesArray.length; j++) {
+                    const dx = particlesArray[i].x - particlesArray[j].x;
+                    const dy = particlesArray[i].y - particlesArray[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    // LONGER CONNECTIONS
+                    if (distance < 180) {
+                        ctx.beginPath();
+                        // THICKER LINES (White)
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.8 - distance/180})`;
+                        ctx.lineWidth = 1.5; // Thicker lines
+                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+    </script>
+</body>
+</html>
