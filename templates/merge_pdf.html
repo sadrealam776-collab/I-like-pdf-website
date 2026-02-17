@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Merge PDF | I Like PDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.4);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 { margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        input[type="file"] {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 2px dashed rgba(255,255,255,0.5);
+            border-radius: 10px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        button {
+            background: white;
+            color: #e73c7e;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        
+        .back-link { display: block; margin-top: 20px; color: rgba(255,255,255,0.7); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Merge PDF Files</h1>
+        <p>Select multiple files to combine them into one.</p>
+        
+        <form action="/api/merge-pdf" method="post" enctype="multipart/form-data">
+            <input type="file" name="files" accept=".pdf" multiple required>
+            <br>
+            <button type="submit">Merge PDF Now</button>
+        </form>
+
+        <a href="/" class="back-link">? Back to Home</a>
+    </div>
+</body>
+</html>

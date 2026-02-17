@@ -1,0 +1,11 @@
+flask
+gunicorn
+werkzeug
+pdf2docx
+PyPDF2
+img2pdf
+pikepdf
+pandas
+openpyxl
+xhtml2pdf
+opencv-python-headless
