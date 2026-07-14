@@ -5,30 +5,37 @@
     <title>JPG to PDF | I Like PDF</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
+        /* AURORA THEME WITH TOP-TO-BOTTOM LAYOUT */
         body {
             font-family: 'Outfit', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: white;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column; /* ????????? ?? ??? ?? ???? ??? ???? ?? ??? */
             align-items: center;
-            justify-content: center;
+            justify-content: start; /* ??? ?? ????????? ???? ???? ?? ??? */
             text-align: center;
             margin: 0;
+            padding: 2rem 1rem; /* ?????? ???? ??????? ??????? ?? ??????? ?? ? ????? */
+            box-sizing: border-box;
         }
         @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
         
         .container {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 3rem;
             border-radius: 24px;
             border: 1px solid rgba(255,255,255,0.4);
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            box-sizing: border-box;
+            margin-bottom: 3rem; /* ???????? ?? ???? ?? ??????? ?? ??? ??? */
         }
 
         h1 { margin-bottom: 0.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -41,6 +48,7 @@
             transition: 0.3s;
             cursor: pointer;
             background: rgba(255,255,255,0.1);
+            box-sizing: border-box;
         }
         .file-upload:hover { background: rgba(255,255,255,0.2); border-color: white; }
 
@@ -56,13 +64,39 @@
             transition: 0.3s;
             margin-top: 2rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 100%; /* ?????? ???????? ????? ?? ??? */
+            max-width: 280px;
         }
         button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
         .back-link { display: inline-block; margin-top: 20px; color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; }
+
+        /* ???? ??????? ?????? ?? ??? ?? ????? */
+        .info-section {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            color: #f1f5f9;
+            text-align: left;
+            line-height: 1.6;
+            padding: 0 1rem;
+            box-sizing: border-box;
+        }
+        .info-section h2, .info-section h3 {
+            color: white;
+            margin-top: 1.5rem;
+        }
+        .info-section ol, .info-section ul {
+            padding-left: 1.2rem;
+        }
+        .info-section li {
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
+
+    <!-- 1. ???????? (?? ?? TOP ?? ????? ????) -->
     <div class="container">
         <h1>JPG to PDF</h1>
         <p>Convert your images into a single PDF.</p>
@@ -79,29 +113,31 @@
 
         <a href="/" class="back-link">? Back to Tools</a>
     </div>
-<div style="max-width: 800px; margin: 50px auto; color: #f1f5f9; text-align: left; line-height: 1.6;">
-    <h2>How to Convert JPG to PDF Files for Free?</h2>
-    <p>Combining multiple PDF documents into one file is easy with <strong>I Like PDF</strong>. Follow these steps:</p>
-    <ol>
-        <li>Click the <strong>Select PDF</strong> button above.</li>
-        <li>Choose the files you want to combine from your device.</li>
-        <li>Our <strong>AI PDF Merger</strong> will stitch them together instantly.</li>
-        <li>Download your new single document.</li>
-    </ol>
-   
-    <h3>Why use our PDF Merger?</h3>
-    <ul>
-        <li><strong>100% Secure:</strong> Files are processed locally or deleted immediately.</li>
-        <li><strong>No Watermarks:</strong> Completely free for professional use.</li>
-        <li><strong>Works on Mobile:</strong> Convert JPG to PDFs on Android, iPhone, or Windows.</li>
-    </ul>
-</div>
+
+    <!-- 2. ????? ???? ??????? (?? ?? BOTTOM ?? ??? ??????? ?? ??? ??? ??) -->
+    <div class="info-section">
+        <h2>How to Convert JPG to PDF Files for Free?</h2>
+        <p>Converting your images into a clean, combined PDF document is simple with <strong>I Like PDF</strong>. Follow these steps:</p>
+        <ol>
+            <li>Click the <strong>Select Images</strong> box above.</li>
+            <li>Choose the <code>.jpg</code>, <code>.jpeg</code>, or <code>.png</code> files you want to convert from your device (you can select multiple photos at once).</li>
+            <li>Our engine will instantly arrange and format the images into document pages.</li>
+            <li>Download your new high-quality single PDF file.</li>
+        </ol>
+        
+        <h3>Why use our Image to PDF Converter?</h3>
+        <ul>
+            <li><strong>100% Secure:</strong> All files are processed securely and deleted from live server storage immediately after your download.</li>
+            <li><strong>No Quality Loss:</strong> Preserves the full resolution, details, and clarity of your original photos.</li>
+            <li><strong>Works on Mobile:</strong> Responsive design tailored perfectly for seamless operation on mobile phone web browsers as well as desktops.</li>
+        </ul>
+    </div>
 
     <script>
         document.getElementById('fileInput').onchange = function () {
             if(this.files && this.files.length > 0) {
                 // Shows count of files (e.g., "3 Images Selected")
-                document.getElementById('fileName').innerText = this.files.length + " Images Selected ?";
+                document.getElementById('fileName').innerText = this.files.length + " Images Selected";
             }
         };
     </script>
