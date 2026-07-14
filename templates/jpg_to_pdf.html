@@ -2,143 +2,137 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JPG to PDF | I Like PDF</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* AURORA THEME WITH TOP-TO-BOTTOM LAYOUT */
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: white;
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #1d4ed8 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column; /* ????????? ?? ??? ?? ???? ??? ???? ?? ??? */
-            align-items: center;
-            justify-content: start; /* ??? ?? ????????? ???? ???? ?? ??? */
-            text-align: center;
-            margin: 0;
-            padding: 2rem 1rem; /* ?????? ???? ??????? ??????? ?? ??????? ?? ? ????? */
-            box-sizing: border-box;
         }
-        @keyframes gradientBG { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
-        
-        .container {
+        .glass-card {
             background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 3rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.4);
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
-            box-sizing: border-box;
-            margin-bottom: 3rem; /* ???????? ?? ???? ?? ??????? ?? ??? ??? */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        h1 { margin-bottom: 0.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        p { color: #f1f5f9; margin-bottom: 2rem; }
-
-        .file-upload {
-            border: 2px dashed rgba(255,255,255,0.6);
-            border-radius: 15px;
-            padding: 2rem;
-            transition: 0.3s;
-            cursor: pointer;
-            background: rgba(255,255,255,0.1);
-            box-sizing: border-box;
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
         }
-        .file-upload:hover { background: rgba(255,255,255,0.2); border-color: white; }
-
-        button {
-            background: white;
-            color: #e73c7e; /* Pink for Images */
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
-            font-weight: 800;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            width: 100%; /* ?????? ???????? ????? ?? ??? */
-            max-width: 280px;
-        }
-        button:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-
-        .back-link { display: inline-block; margin-top: 20px; color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500; }
-
-        /* ???? ??????? ?????? ?? ??? ?? ????? */
-        .info-section {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            color: #f1f5f9;
-            text-align: left;
-            line-height: 1.6;
-            padding: 0 1rem;
-            box-sizing: border-box;
-        }
-        .info-section h2, .info-section h3 {
-            color: white;
-            margin-top: 1.5rem;
-        }
-        .info-section ol, .info-section ul {
-            padding-left: 1.2rem;
-        }
-        .info-section li {
-            margin-bottom: 0.5rem;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body class="flex flex-col items-center justify-start p-4 md:p-10 text-white">
 
-    <!-- 1. ???????? (?? ?? TOP ?? ????? ????) -->
-    <div class="container">
-        <h1>JPG to PDF</h1>
-        <p>Convert your images into a single PDF.</p>
+    <div class="w-full max-w-4xl flex flex-col items-center gap-10 mt-4 md:mt-10">
         
-        <form action="/api/jpg-to-pdf" method="post" enctype="multipart/form-data">
-            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                <span style="font-size: 2rem;">???</span><br>
-                <span id="fileName">Click to Select Images</span>
-                <input type="file" id="fileInput" name="files" accept=".jpg,.jpeg,.png" multiple required style="display:none;">
+        <!-- Top UI Toolbox Container -->
+        <div class="glass-card w-full max-w-xl p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-extrabold tracking-tight mb-2 text-white">JPG to PDF</h1>
+                <p class="text-blue-100 text-sm">Convert your images into a single structured PDF.</p>
             </div>
+
+            <form id="uploadForm" action="/api/jpg-to-pdf" method="POST" enctype="multipart/form-data">
+                <div class="group relative border-2 border-dashed border-white/40 rounded-2xl p-8 text-center hover:border-white transition-all bg-white/5 cursor-pointer">
+                    <input type="file" name="files" id="pdf_file" accept=".jpg,.jpeg,.png" multiple
+                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+                    
+                    <div id="fileStatus">
+                        <div class="text-white/80 mb-3 flex justify-center">
+                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-white font-medium text-lg" id="fileNameText">Click to Select Images</p>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" 
+                        class="w-full mt-6 bg-white text-blue-700 font-bold py-4 px-6 rounded-full shadow-lg hover:bg-blue-50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center text-lg">
+                    <span id="btnText">Convert Now</span>
+                </button>
+            </form>
+
+            <div id="loadingMsg" class="hidden mt-6 text-center bg-black/20 p-4 rounded-xl backdrop-blur-sm">
+                <div class="loader mb-2"></div>
+                <p class="text-white text-sm font-medium animate-pulse">Encoding image dimensions, parsing color ranges & rendering document...</p>
+            </div>
+
+            <div class="text-center mt-6">
+                <a href="/" class="text-xs text-white/70 hover:text-white transition-colors">← Back to Home</a>
+            </div>
+        </div>
+
+        <!-- Information/Documentation Below -->
+        <div class="w-full max-w-2xl text-center md:text-left px-4">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight">How to Convert JPG to PDF Files for Free?</h2>
+            <p class="text-blue-100 mb-6 text-sm md:text-base leading-relaxed">
+                Compiling raster image formats into clean vector-ready document bounds is completely effortless. Follow these workflow operations:
+            </p>
             
-            <button type="submit">Convert Now</button>
-        </form>
+            <ol class="list-decimal list-inside space-y-3 text-blue-50 text-sm md:text-base mb-8 text-left max-w-md mx-auto md:mx-0">
+                <li>Click the dedicated dropzone workspace entry labeled <span class="font-semibold">Select Images</span> above.</li>
+                <li>Pick the <code>.jpg</code>, <code>.jpeg</code>, or <code>.png</code> graphical files you want to process from your device memory storage.</li>
+                <li>Our conversion script scans layout heights and centers graphic frames into standard canvas sizes automatically.</li>
+                <li>Fetch your freshly rendered high fidelity compound PDF document block immediately.</li>
+            </ol>
 
-        <a href="/" class="back-link">? Back to Tools</a>
-    </div>
+            <h3 class="text-xl font-bold mb-4 tracking-tight">Why use our Image to PDF Converter?</h3>
+            <ul class="space-y-3 text-blue-100 text-sm md:text-base text-left max-w-md mx-auto md:mx-0">
+                <li class="flex items-start gap-2">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>100% Secure:</strong> Graphic objects are processed entirely in memory cache zones and dropped cleanly upon completion.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>No Quality Loss:</strong> Preserves raw scale values, text properties, and resolution limits with zero compression distortion.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-emerald-400 font-bold">✓</span>
+                    <span><strong>Works on Mobile:</strong> Flexible layout grids re-scale across compact views to serve mobile operating platforms seamlessly.</span>
+                </li>
+            </ul>
+        </div>
 
-    <!-- 2. ????? ???? ??????? (?? ?? BOTTOM ?? ??? ??????? ?? ??? ??? ??) -->
-    <div class="info-section">
-        <h2>How to Convert JPG to PDF Files for Free?</h2>
-        <p>Converting your images into a clean, combined PDF document is simple with <strong>I Like PDF</strong>. Follow these steps:</p>
-        <ol>
-            <li>Click the <strong>Select Images</strong> box above.</li>
-            <li>Choose the <code>.jpg</code>, <code>.jpeg</code>, or <code>.png</code> files you want to convert from your device (you can select multiple photos at once).</li>
-            <li>Our engine will instantly arrange and format the images into document pages.</li>
-            <li>Download your new high-quality single PDF file.</li>
-        </ol>
-        
-        <h3>Why use our Image to PDF Converter?</h3>
-        <ul>
-            <li><strong>100% Secure:</strong> All files are processed securely and deleted from live server storage immediately after your download.</li>
-            <li><strong>No Quality Loss:</strong> Preserves the full resolution, details, and clarity of your original photos.</li>
-            <li><strong>Works on Mobile:</strong> Responsive design tailored perfectly for seamless operation on mobile phone web browsers as well as desktops.</li>
-        </ul>
     </div>
 
     <script>
-        document.getElementById('fileInput').onchange = function () {
-            if(this.files && this.files.length > 0) {
-                // Shows count of files (e.g., "3 Images Selected")
-                document.getElementById('fileName').innerText = this.files.length + " Images Selected";
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('pdf_file');
+        const fileNameText = document.getElementById('fileNameText');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const loadingMsg = document.getElementById('loadingMsg');
+
+        fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+                fileNameText.innerText = fileInput.files.length + " Images Selected";
             }
+        };
+
+        form.onsubmit = () => {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            btnText.innerText = "Processing...";
+            loadingMsg.classList.remove('hidden');
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerText = "Convert Now";
+                loadingMsg.classList.add('hidden');
+            }, 20000);
+
+            return true;
         };
     </script>
 </body>
