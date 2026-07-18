@@ -121,16 +121,17 @@
                 <p class="text-pink-200/60 text-xs tracking-wide">Convert your PDF to editable Docx.</p>
             </div>
 
-            <form id="uploadForm" action="/convert" method="POST" enctype="multipart/form-data" class="space-y-5">
+            <!-- CORRECTED ACTION ROUTE TO MATCH FLASK API UNIFORMITY -->
+            <form id="uploadForm" action="/api/pdf-to-word" method="POST" enctype="multipart/form-data" class="space-y-5">
                 <div class="core-deck group relative border rounded-2xl p-6 text-center hover:border-pink-400/50 transition-all cursor-pointer">
                     <input type="file" name="pdf_file" id="pdf_file" accept=".pdf" 
                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
                     
                     <div id="fileStatus" style="transform: translateZ(20px);">
                         
-                        <!-- REAL PDF TO WORD LOGO SYSTEM -->
+                        <!-- REAL 3D-FEEL PDF TO WORD LOGO GRAPHIC -->
                         <div class="mb-4 flex items-center justify-center gap-4 drop-shadow-[0_0_20px_rgba(236,72,153,0.5)] group-hover:scale-105 transition-transform duration-300">
-                            <!-- PDF Icon Box -->
+                            <!-- PDF Icon Block -->
                             <div class="bg-gradient-to-br from-red-500 to-red-600 text-white font-black text-[10px] px-3 py-4 rounded-xl border border-white/20 relative shadow-lg tracking-wider">
                                 PDF
                                 <div class="absolute bottom-1 right-1.5 w-1.5 h-1.5 bg-white/40 rounded-full"></div>
@@ -164,11 +165,11 @@
             </div>
 
             <div class="text-center mt-5">
-                <a href="#" class="text-xs text-white/70 hover:text-white transition-colors">? Back to Tools</a>
+                <a href="/" class="text-xs text-white/70 hover:text-white transition-colors">? Back to Tools</a>
             </div>
         </div>
 
-        <!-- BOTTOM: System Documentation (Kept exactly as it is) -->
+        <!-- BOTTOM: System Documentation -->
         <div class="w-full max-w-2xl text-center md:text-left px-4" style="transform: translateZ(20px);">
             <h2 class="text-2xl md:text-3xl font-bold mb-4 tracking-tight text-white drop-shadow-[0_5px_10px_rgba(0,0,0,0.3)]">How to Convert PDF to Word Files for Free?</h2>
             <p class="text-slate-400 mb-6 text-sm leading-relaxed">
