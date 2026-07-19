@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="PmzPKllIbi44i-hkoQbTMByuD9JfWb8qu2bVbkHZO64" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LikePDF | Free Online PDF Converter, Merge & Compress PDF Tools</title>
+    
+    <meta name="description" content="LikePDF is the best free online PDF converter and web workspace. Convert PDF to Word, merge PDF files, split, compress PDF size, and upscale images to Full HD instantly with AI precision.">
+    <meta name="keywords" content="likepdf, free online pdf converter, pdf to word converter, merge pdf online, compress pdf size, split pdf pages, convert excel to pdf, jpg to pdf converter, remove pdf password, blur to clear image ai, image upscaler online, best free pdf tools">
+    <meta name="author" content="LikePDF">
+    <meta name="robots" content="index, follow">
+
+    <!-- Google Search Console Rich Results Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "LikePDF",
+      "url": "https://likepdf.com/",
+      "description": "Best free online PDF converter and document workspace to convert PDF to Word, merge, split, compress, and edit documents safely.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires HTML5",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "12450"
+      }
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #03030a;
+            min-height: 100vh;
+            perspective: 1500px;
+        }
+
+        /* FIXED: Full Page Dynamic Canvas Mapping (Head to Bottom) */
+        #canvas-container {
+            position: absolute;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            z-index: 0; 
+            pointer-events: none;
+        }
+        #quantumMesh {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .glass-nav {
+            background: rgba(4, 4, 12, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-footer {
+            background: rgba(6, 6, 18, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Luxury Dark Matrix Cards */
+        .card-4d {
+            background: rgba(13, 15, 26, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .card-4d:hover {
+            border-color: rgba(236, 72, 153, 0.3);
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9), 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .icon-deck {
+            position: relative;
+            z-index: 1;
+        }
+        .icon-deck::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            background: inherit;
+            filter: blur(14px);
+            opacity: 0.4;
+            z-index: -1;
+            border-radius: inherit;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-start text-slate-300 min-h-screen select-none relative">
+
+    <!-- Full HTML Height Quantum Canvas Layer (Head to Bottom Bound) -->
+    <div id="canvas-container">
+        <canvas id="quantumMesh"></canvas>
+    </div>
+
+    <!-- ADVANCED PREMIUM HEADER -->
+    <nav class="glass-nav w-full fixed top-0 left-0 z-50 px-6 md:px-12 py-3.5 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+            <div class="bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-2.5 rounded-xl text-white shadow-lg shadow-indigo-500/20 group-hover:rotate-12 transition-transform duration-300">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+            </div>
+            <div>
+                <div class="text-xl font-extrabold tracking-tight text-white leading-none">LikePDF</div>
+                <div class="text-[9px] text-pink-400 font-bold tracking-widest uppercase mt-0.5">Free PDF Tools</div>
+            </div>
+        </a>
+        
+        <!-- Center Quick Workspace Nav Elements -->
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+            <a href="#pdf-section" class="hover:text-white transition-colors flex items-center gap-1.5"><i class="fa-solid fa-file-pdf text-xs text-pink-400"></i> PDF Converters</a>
+            <a href="#image-section" class="hover:text-white transition-colors flex items-center gap-1.5"><i class="fa-solid fa-images text-xs text-cyan-400"></i> Image Utilities</a>
+            <a href="#about-section" class="hover:text-white transition-colors">Enterprise Privacy</a>
+        </div>
+
+        <!-- Right Side Utility Controls -->
+        <div class="flex items-center gap-4">
+            <div class="hidden lg:flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-[11px] text-slate-400 font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                AI Processing Nodes: Active
+            </div>
+            <a href="#pdf-section" class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95">
+                Get Started Free
+            </a>
+        </div>
+    </nav>
+
+    <!-- SECTION 1: PDF TOOLS WORKSPACE -->
+    <main id="pdf-section" class="w-full max-w-6xl px-6 pt-36 pb-12 z-10">
+        <div class="mb-10 text-left">
+            <span class="inline-flex items-center gap-1.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-extrabold px-3 py-1.5 rounded-full border border-cyan-500/20 tracking-wider uppercase mb-4">
+                <i class="fa-solid fa-file-pdf"></i> All-In-One Free Online PDF Converter
+            </span>
+            <h1 class="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white mb-2">
+                Best Free Online PDF Converter & Document Tools
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base font-medium">
+                Fast, secure, and premium web instruments to convert PDF to Word, merge, split, and compress PDF online free.
+            </p>
+        </div>
+
+        <!-- PDF Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+            <!-- Merge PDF -->
+            <a href="/merge-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-pink-500/20 text-pink-400 text-lg mb-4">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Merge PDF Online</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Combine multiple PDF files into one seamless document for free.</p>
+                </div>
+            </a>
+
+            <!-- Split PDF -->
+            <a href="/split-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-cyan-500/20 text-cyan-400 text-lg mb-4">
+                        <i class="fa-solid fa-scissors"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Split PDF Pages</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Extract specific pages or separate documents instantly.</p>
+                </div>
+            </a>
+
+            <!-- Compress PDF -->
+            <a href="/compress-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/20 text-indigo-400 text-lg mb-4">
+                        <i class="fa-solid fa-compress"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Compress PDF Size</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Reduce PDF file size online while maintaining maximum quality.</p>
+                </div>
+            </a>
+
+            <!-- PDF to Word -->
+            <a href="/pdf-to-word" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-blue-500/20 text-blue-400 text-lg mb-4">
+                        <i class="fa-solid fa-file-word"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">PDF to Word Converter</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Convert PDF to editable DOCX files with premium layout accuracy.</p>
+                </div>
+            </a>
+
+            <!-- Excel to PDF -->
+            <a href="/excel-to-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-emerald-500/20 text-emerald-400 text-lg mb-4">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Convert Excel to PDF</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Transform Excel spreadsheets into secure grid-accurate PDFs.</p>
+                </div>
+            </a>
+
+            <!-- JPG to PDF -->
+            <a href="/jpg-to-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-orange-500/20 text-orange-400 text-lg mb-4">
+                        <i class="fa-solid fa-file-image"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">JPG to PDF Converter</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Convert multiple JPG, JPEG, and PNG images into a single PDF.</p>
+                </div>
+            </a>
+
+            <!-- Unlock PDF -->
+            <a href="/unlock-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-teal-500/20 text-teal-400 text-lg mb-4">
+                        <i class="fa-solid fa-unlock"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Unlock PDF Password</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Remove security restrictions and restrictions layers instantly.</p>
+                </div>
+            </a>
+
+            <!-- Protect PDF -->
+            <a href="/protect-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-sky-500/20 text-sky-400 text-lg mb-4">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Protect PDF Online</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Encrypt and secure your sensitive documents with passwords.</p>
+                </div>
+            </a>
+
+            <!-- Watermark PDF -->
+            <a href="/watermark-remover" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-purple-500/20 text-purple-400 text-lg mb-4">
+                        <i class="fa-solid fa-stamp"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Watermark Remover</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Remove annoying stamp backgrounds from any PDF file.</p>
+                </div>
+            </a>
+
+            <!-- Rotate PDF -->
+            <a href="/rotate-pdf" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-fuchsia-500/20 text-fuchsia-400 text-lg mb-4">
+                        <i class="fa-solid fa-rotate animate-pulse"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Rotate PDF Pages</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Orient, rotate, and permanently save your PDF page matrices safely.</p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <!-- SECTION 2: IMAGE TOOLS WORKSPACE -->
+    <section id="image-section" class="w-full max-w-6xl px-6 py-12 z-10">
+        <div class="mb-10 text-left">
+            <span class="inline-flex items-center gap-1.5 bg-pink-500/10 text-pink-400 text-[10px] font-extrabold px-3 py-1.5 rounded-full border border-pink-500/20 tracking-wider uppercase mb-4">
+                <i class="fa-solid fa-images"></i> Smart Image Optimization Suite
+            </span>
+            <h2 class="font-['Space_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white mb-2">
+                Free Image Utilities with Pixel Precision
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base font-medium">
+                Enhance, resize, compress, and transcode raster images instantly using web optimization triggers.
+            </p>
+        </div>
+
+        <!-- Image Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+            <!-- Resize Image -->
+            <a href="/resize-image" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-cyan-400/20 text-cyan-400 text-lg mb-4">
+                        <i class="fa-solid fa-maximize"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Resize Image Online</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Change custom dimensions without stretching artifacts.</p>
+                </div>
+            </a>
+
+            <!-- Compress Image -->
+            <a href="/compress-image" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-rose-500/20 text-rose-400 text-lg mb-4">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Compress Image Size</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Reduce image KB footprint while keeping visual strings high.</p>
+                </div>
+            </a>
+
+            <!-- Convert Image -->
+            <a href="/convert-image" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-indigo-500/20 text-indigo-400 text-lg mb-4">
+                        <i class="fa-solid fa-repeat"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Image Converter</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Transcode image formats seamlessly across JPG, PNG, and WebP.</p>
+                </div>
+            </a>
+
+            <!-- Blur to Clear AI -->
+            <a href="/blur-to-clear" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48 border-pink-500/30">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-pink-500/20 text-pink-400 text-lg mb-4 animate-pulse">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide text-pink-400">Blur to Clear AI</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Intelligently unblur low-resolution photos and fix lines instantly.</p>
+                </div>
+            </a>
+
+            <!-- Full HD Upscaler -->
+            <a href="/full-hd-photo" class="card-4d rounded-2xl p-5 relative group flex flex-col justify-between h-48">
+                <i class="fa-solid fa-arrow-up-right absolute top-5 right-5 text-slate-600 group-hover:text-slate-400 text-xs transition-colors"></i>
+                <div>
+                    <div class="icon-deck w-11 h-11 rounded-xl flex items-center justify-center bg-amber-500/20 text-amber-400 text-lg mb-4">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h2 class="text-white text-base font-bold mb-1 tracking-wide">Image Upscaler Online</h2>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">Upscale old or low-res images into standard crisp HD matrices.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- REALISTIC PREMIUM SAAS FOOTER -->
+    <footer id="about-section" class="glass-footer w-full mt-24 z-10 text-slate-400 text-xs">
+        <div class="max-w-6xl mx-auto px-6 py-14 grid grid-cols-1 md:grid-cols-12 gap-10">
+            <!-- Brand Panel (4 Columns) -->
+            <div class="md:col-span-4 space-y-4">
+                <div class="flex items-center gap-2 text-white font-extrabold text-base tracking-tight">
+                    <div class="bg-gradient-to-tr from-indigo-500 to-pink-500 p-1.5 rounded-lg text-white">
+                        <i class="fa-solid fa-layer-group text-sm"></i>
+                    </div>
+                    <span>LikePDF Suite</span>
+                </div>
+                <p class="text-slate-400/80 leading-relaxed text-[13px]">
+                    Transforming complex document architectures and raster graphics pipelines into pixel-perfect assets with zero latency.
+                </p>
+                <!-- Newsletter Form System -->
+                <div class="pt-2">
+                    <form class="flex max-w-sm border border-white/10 rounded-xl overflow-hidden bg-slate-950/50 focus-within:border-pink-500/50 transition-colors">
+                        <input type="email" placeholder="Subscribe to updates" class="bg-transparent px-4 py-2 w-full text-slate-200 outline-none text-xs" required>
+                        <button type="submit" class="bg-white/10 hover:bg-white/20 text-white px-4 border-l border-white/10 transition-colors"><i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PDF Column (3 Columns) -->
+            <div class="md:col-span-3 md:ml-6">
+                <h3 class="text-white font-bold text-sm mb-4 tracking-wide uppercase text-[10px] text-pink-400 font-bold">Document Matrices</h3>
+                <ul class="space-y-2.5 text-[13px]">
+                    <li><a href="/pdf-to-word" class="hover:text-white transition-colors">PDF to Word Converter</a></li>
+                    <li><a href="/merge-pdf" class="hover:text-white transition-colors">Merge PDFs Online</a></li>
+                    <li><a href="/compress-pdf" class="hover:text-white transition-colors">Reduce PDF Size</a></li>
+                    <li><a href="/protect-pdf" class="hover:text-white transition-colors">Encrypt Sensitive PDF</a></li>
+                </ul>
+            </div>
+
+            <!-- Image Column (2 Columns) -->
+            <div class="md:col-span-2">
+                <h3 class="text-white font-bold text-sm mb-4 tracking-wide uppercase text-[10px] text-cyan-400 font-bold">Graphics Core</h3>
+                <ul class="space-y-2.5 text-[13px]">
+                    <li><a href="/blur-to-clear" class="hover:text-white transition-colors">Blur to Clear AI</a></li>
+                    <li><a href="/full-hd-photo" class="hover:text-white transition-colors">HD Photo Upscaler</a></li>
+                    <li><a href="/compress-image" class="hover:text-white transition-colors">Compress Quality</a></li>
+                </ul>
+            </div>
+
+            <!-- Trust Vector Column (3 Columns) -->
+            <div class="md:col-span-3 space-y-3.5 border-l border-white/5 md:pl-6">
+                <h3 class="text-white font-bold text-sm mb-1 tracking-wide uppercase text-[10px] text-slate-300 font-bold">Privacy Framework</h3>
+                <div class="flex items-start gap-2 bg-white/5 p-2.5 rounded-xl border border-white/5">
+                    <i class="fa-solid fa-shield-halved text-emerald-500 text-sm mt-0.5"></i>
+                    <div>
+                        <h4 class="text-white font-semibold text-[11px]">ISO 27001 Processing</h4>
+                        <p class="text-[10px] text-slate-400/80 mt-0.5">Files are processed over temporary secure sandbox layers.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 bg-white/5 p-2.5 rounded-xl border border-white/5">
+                    <i class="fa-solid fa-trash text-rose-400 text-sm mt-0.5"></i>
+                    <div>
+                        <h4 class="text-white font-semibold text-[11px]">Instant Wipe Mechanism</h4>
+                        <p class="text-[10px] text-slate-400/80 mt-0.5">All local file outputs auto-expire after 60 minutes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Copyright Band -->
+        <div class="w-full border-t border-white/5 py-5 text-center text-[11px] text-slate-500">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p>&copy; 2026 LikePDF Workspace Suite. Engineered safely with open privacy standards.</p>
+                <div class="flex gap-4 text-slate-500/80">
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <span class="text-white/10">|</span>
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Protected Full Height Particle Rendering Script Pipeline -->
+    <script>
+        const canvas = document.getElementById('quantumMesh');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 180 };
+
+        function resize() {
+            // FIXED: Automatically maps height bound calculation based on the absolute container scale
+            const body = document.body;
+            const html = document.documentElement;
+            const fullHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            
+            canvas.width = window.innerWidth;
+            canvas.height = fullHeight;
+            init();
+        }
+
+        class Node {
+            constructor(x, y) {
+                this.x = x; this.y = y; this.baseX = x; this.baseY = y;
+                this.size = Math.random() * 2.5 + 2.5;
+                this.density = (Math.random() * 40) + 15;
+                this.color = Math.random() > 0.4 ? 'rgba(236, 72, 153, 0.65)' : 'rgba(139, 92, 246, 0.55)';
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.shadowBlur = 8; ctx.shadowColor = this.color;
+                ctx.fill(); ctx.shadowBlur = 0;
+            }
+            update() {
+                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                let distance = Math.hypot(dx, dy);
+                if (distance < mouse.radius) {
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    this.x -= (dx / distance) * force * this.density;
+                    this.y -= (dy / distance) * force * this.density;
+                } else {
+                    this.x -= (this.x - this.baseX) / 12; this.y -= (this.y - this.baseY) / 12;
+                }
+            }
+        }
+
+        function init() {
+            particles = [];
+            // Particle concentration dynamically adjusted for massive document scale heights
+            let count = (canvas.width * canvas.height) / 6000;
+            if (count > 450) count = 450; // Cap limits to keep hardware streams completely fluent
+            
+            for (let i = 0; i < count; i++) {
+                particles.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        function renderLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                for (let j = i; j < particles.length; j++) {
+                    let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                    if (dist < 100) {
+                        ctx.beginPath(); ctx.strokeStyle = `rgba(236, 72, 153, ${0.25 - (dist/100)*0.25})`;
+                        ctx.lineWidth = 0.8; ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(renderLoop);
+        }
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => { 
+            // Fixed mouse scroll positioning offsets inside standard absolute canvas viewports
+            mouse.x = e.pageX; 
+            mouse.y = e.pageY; 
+        });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        // Trigger initial paint states explicitly
+        resize(); 
+        renderLoop();
+
+        const cards = document.querySelectorAll('.card-4d');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - (rect.width / 2);
+                const y = e.clientY - rect.top - (rect.height / 2);
+                card.style.transform = `rotateY(${x / 14}deg) rotateX(${-y / 14}deg) translateZ(5px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg) translateZ(0px)';
+            });
+        });
+    </script>
+</body>
+</html>

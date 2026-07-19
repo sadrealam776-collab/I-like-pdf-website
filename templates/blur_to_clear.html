@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blur to Clear AI | LikePDF Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: radial-gradient(circle at center, #1e1b4b 0%, #0f0728 60%, #050212 100%);
+            min-height: 100vh; overflow-x: hidden; perspective: 1500px;
+        }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .box-4d-device {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.75), rgba(15, 7, 40, 0.85));
+            backdrop-filter: blur(30px);
+            border-top: 2px solid rgba(236, 72, 153, 0.5); 
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(236, 72, 153, 0.25), inset 0 -12px 24px rgba(0, 0, 0, 0.6);
+            transform-style: preserve-3d; transition: transform 0.1s ease-out, box-shadow 0.4s ease;
+        }
+        .core-deck { transform: translateZ(35px); background: rgba(5, 2, 18, 0.7); border: 1px solid rgba(236, 72, 153, 0.2); }
+        .btn-4d-kinetic { background: linear-gradient(135deg, #ec4899, #8b5cf6); border-bottom: 4px solid #4c1d95; transform: translateZ(45px); transition: all 0.15s ease; }
+        .btn-4d-kinetic:hover { transform: translateZ(50px) scale(1.03); }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-start p-4 md:p-12 text-slate-200">
+
+    <div id="canvas-container"><canvas id="quantumMesh"></canvas></div>
+
+    <div class="w-full max-w-4xl flex flex-col items-center gap-16 mt-4 md:mt-10 z-10">
+        <!-- SMALL 4D TOOLBOX -->
+        <div id="quantumDevice" class="box-4d-device w-full max-w-md p-6 md:p-8 rounded-[2.5rem] relative">
+            <div class="text-center mb-6" style="transform: translateZ(50px);">
+                <h1 class="text-3xl font-extrabold tracking-tight mb-2 text-white">Blur to Clear AI</h1>
+                <p class="text-pink-200/60 text-xs tracking-wide">Intelligently analyze blurred pixels and sharpen focus lines.</p>
+            </div>
+
+            <form id="uploadForm" action="/api/blur-to-clear" method="POST" enctype="multipart/form-data" class="space-y-5">
+                <div class="core-deck group relative border rounded-2xl p-6 text-center hover:border-pink-400/50 transition-all cursor-pointer">
+                    <input type="file" name="file" id="img_file" accept=".jpg,.jpeg,.png" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+                    <div id="fileStatus" style="transform: translateZ(20px);">
+                        <!-- Image Enhancement Logo -->
+                        <div class="mb-4 flex items-center justify-center gap-3 drop-shadow-[0_0_20px_rgba(236,72,153,0.5)] group-hover:scale-105 transition-transform">
+                            <div class="text-slate-500 blur-[2px] text-xs"><i class="fa-solid fa-image text-2xl"></i></div>
+                            <div class="text-pink-400 text-lg animate-pulse"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <div class="text-cyan-400 text-xs"><i class="fa-solid fa-image text-2xl"></i></div>
+                        </div>
+                        <p class="text-slate-300 font-medium text-base tracking-wider" id="fileNameText">Select Target Image</p>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-4d-kinetic w-full text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center text-sm uppercase tracking-widest">
+                    <span id="btnText">Restore Image Now</span>
+                </button>
+            </form>
+            <div class="text-center mt-5"><a href="/" class="text-xs text-white/70 hover:text-white">? Back to Home</a></div>
+        </div>
+    </div>
+
+    <!-- 4D Particle Mechanics Copy from main app -->
+    <script>
+        const canvas = document.getElementById('quantumMesh'); const ctx = canvas.getContext('2d'); let particles = []; let mouse = { x: null, y: null, radius: 180 };
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); }
+        class Node {
+            constructor(x, y) { this.x = x; this.y = y; this.baseX = x; this.baseY = y; this.size = Math.random() * 3 + 3; this.density = (Math.random() * 40) + 15; this.color = Math.random() > 0.4 ? 'rgba(236, 72, 153, 0.75)' : 'rgba(139, 92, 246, 0.65)'; }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.shadowBlur = 10; ctx.shadowColor = this.color; ctx.fill(); ctx.shadowBlur = 0; }
+            update() { let dx = mouse.x - this.x; let dy = mouse.y - this.y; let distance = Math.hypot(dx, dy); if (distance < mouse.radius) { let force = (mouse.radius - distance) / mouse.radius; this.x -= (dx / distance) * force * this.density; this.y -= (dy / distance) * force * this.density; } else { this.x -= (this.x - this.baseX) / 12; this.y -= (this.y - this.baseY) / 12; } }
+        }
+        function init() { particles = []; let count = (canvas.width * canvas.height) / 3800; for (let i = 0; i < count; i++) { particles.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height)); } }
+        function renderLoop() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); for (let j = i; j < particles.length; j++) { let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y); if (dist < 95) { ctx.beginPath(); ctx.strokeStyle = `rgba(236, 72, 153, ${0.35 - (dist/95)*0.35})`; ctx.lineWidth = 1.0; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); } } } requestAnimationFrame(renderLoop); }
+        window.addEventListener('resize', resize); window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        resize(); renderLoop();
+        const device = document.getElementById('quantumDevice');
+        document.addEventListener('mousemove', (e) => { let xAxis = (window.innerWidth / 2 - e.pageX) / 18; let yAxis = (window.innerHeight / 2 - e.pageY) / 18; device.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg) translateZ(10px)`; });
+        
+        document.getElementById('img_file').onchange = (e) => { if(e.target.files.length > 0) document.getElementById('fileNameText').innerText = e.target.files[0].name; };
+    </script>
+</body>
+</html>

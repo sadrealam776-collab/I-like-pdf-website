@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Image | LikePDF Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: radial-gradient(circle at center, #1e1b4b 0%, #0f0728 60%, #050212 100%); min-height: 100vh; perspective: 1500px; }
+        .box-4d-device { background: linear-gradient(135deg, rgba(30, 27, 75, 0.75), rgba(15, 7, 40, 0.85)); backdrop-filter: blur(30px); border-top: 2px solid rgba(236, 72, 153, 0.5); }
+        .core-deck { background: rgba(5, 2, 18, 0.7); border: 1px solid rgba(236, 72, 153, 0.2); }
+        .btn-4d-kinetic { background: linear-gradient(135deg, #ec4899, #8b5cf6); border-bottom: 4px solid #4c1d95; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-start p-4 md:p-12 text-slate-200">
+    <div class="w-full max-w-4xl flex flex-col items-center gap-16 mt-4 md:mt-10 z-10">
+        <div id="quantumDevice" class="box-4d-device w-full max-w-md p-6 md:p-8 rounded-[2.5rem]">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-extrabold tracking-tight mb-2 text-white">Convert Image</h1>
+                <p class="text-pink-200/60 text-xs">Transcode graphical structures across formats cleanly.</p>
+            </div>
+            <form id="uploadForm" action="/api/convert-image" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <div class="core-deck group relative border rounded-2xl p-6 text-center hover:border-pink-400/50 cursor-pointer">
+                    <input type="file" name="file" id="img_file" accept=".jpg,.jpeg,.png,.webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" required>
+                    <div id="fileStatus">
+                        <div class="mb-4 flex items-center justify-center gap-3">
+                            <div class="text-slate-400 text-2xl"><i class="fa-solid fa-image"></i></div>
+                            <div class="text-indigo-400 text-xl"><i class="fa-solid fa-repeat"></i></div>
+                        </div>
+                        <p class="text-slate-300 font-medium text-base" id="fileNameText">Select Source Image</p>
+                    </div>
+                </div>
+                <div class="bg-slate-950/40 border border-white/10 rounded-2xl p-4 space-y-2 text-xs">
+                    <label class="block font-semibold text-slate-300">Target Output Format:</label>
+                    <select name="target_format" class="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-slate-200 focus:outline-none">
+                        <option value="PNG">PNG Format</option>
+                        <option value="JPEG">JPG Format</option>
+                        <option value="WEBP">WebP Format</option>
+                    </select>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-4d-kinetic w-full text-white font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-widest">Transcode Asset</button>
+            </form>
+            <div class="text-center mt-5"><a href="/" class="text-xs text-white/70 hover:text-white">? Back to Home</a></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('img_file').onchange = (e) => { if(e.target.files.length > 0) document.getElementById('fileNameText').innerText = e.target.files[0].name; };
+    </script>
+</body>
+</html>
