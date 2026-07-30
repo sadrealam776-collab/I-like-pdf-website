@@ -1,8 +1,11 @@
 import os
+import uuid
 import cv2
+import requests
 import numpy as np
 from PIL import Image, ImageEnhance
 from flask import Flask, request, send_file, render_template, jsonify, make_response
+from werkzeug.utils import secure_filename
 from pypdf import PdfReader, PdfWriter
 from pdf2docx import Converter
 import img2pdf
@@ -18,6 +21,39 @@ UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+# Helper configurations for Blur-to-Clear Route
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "bmp"}
+MAX_FILE_SIZE_MB = 15
+
+def allowed_file(filename: str) -> bool:
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def detect_blur_score(gray_img) -> float:
+    """
+    Laplacian variance: blur metric. Lower value = blurrier image.
+    """
+    return cv2.Laplacian(gray_img, cv2.CV_64F).var()
+
+def adaptive_strength(blur_score: float):
+    """
+    Maps the blur score to sharpening/contrast parameters.
+    """
+    if blur_score < 15:          # very blurry
+        sharpen_amount, unsharp_weight, contrast = 3.0, -1.8, 1.35
+    elif blur_score < 50:        # moderately blurry
+        sharpen_amount, unsharp_weight, contrast = 2.4, -1.4, 1.25
+    elif blur_score < 150:       # mildly soft
+        sharpen_amount, unsharp_weight, contrast = 1.8, -0.9, 1.15
+    else:                        # already fairly sharp
+        sharpen_amount, unsharp_weight, contrast = 1.3, -0.5, 1.05
+    return sharpen_amount, unsharp_weight, contrast
+
+# SAFE TEMPLATE RENDERER FUNCTION (Fixes UnicodeDecodeError on Windows)
+def safe_render(template_name):
+    template_path = os.path.join(app.root_path, 'templates', template_name)
+    with open(template_path, 'r', encoding='utf-8', errors='ignore') as f:
+        return f.read()
 
 # ==========================================
 # TECHNICAL SEO: DYNAMIC ROBOTS.TXT & SITEMAP
@@ -52,84 +88,83 @@ def sitemap_xml():
 
 
 # ==========================================
-# PAGE ROUTERS (FRONTEND RENDERING)
+# PAGE ROUTERS (USES SAFE UTF-8 RENDERER)
 # ==========================================
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return safe_render('home.html')
 
 @app.route('/pdf-to-word')
 def pdf_to_word_page():
-    return render_template('pdf_to_word.html')
+    return safe_render('pdf_to_word.html')
 
 @app.route('/compress-pdf')
 def compress_pdf_page():
-    return render_template('compress_pdf.html')
+    return safe_render('compress_pdf.html')
 
 @app.route('/excel-to-pdf')
 def excel_to_pdf_page():
-    return render_template('excel_to_pdf.html')
+    return safe_render('excel_to_pdf.html')
 
 @app.route('/jpg-to-pdf')
 def jpg_to_pdf_page():
-    return render_template('jpg_to_pdf.html')
+    return safe_render('jpg_to_pdf.html')
 
 @app.route('/merge-pdf')
 def merge_pdf_page():
-    return render_template('merge_pdf.html')
+    return safe_render('merge_pdf.html')
 
 @app.route('/split-pdf')
 def split_pdf_page():
-    return render_template('split_pdf.html')
+    return safe_render('split_pdf.html')
 
 @app.route('/secret-image-tool')
 def secret_image_tool_page():
-    return render_template('secret_image_tool.html')
+    return safe_render('secret_image_tool.html')
 
 @app.route('/full-hd-photo')
 def full_hd_photo_page():
-    return render_template('full_hd_photo.html')
+    return safe_render('full_hd_photo.html')
 
 @app.route('/ai-layout-fixer')
 def ai_layout_fixer_page():
-    return render_template('ai_layout_fixer.html')
+    return safe_render('ai_layout_fixer.html')
 
 @app.route('/watermark-remover')
 def watermark_remover_page():
-    return render_template('watermark_remover.html')
+    return safe_render('watermark_remover.html')
 
 @app.route('/auto-sorter')
 def auto_sorter_page():
-    return render_template('auto_sorter.html')
+    return safe_render('auto_sorter.html')
 
 @app.route('/unlock-pdf')
 def unlock_pdf_page(): 
-    return render_template('unlock_pdf.html')
+    return safe_render('unlock_pdf.html')
 
 @app.route('/protect-pdf')
 def protect_pdf_page(): 
-    return render_template('protect_pdf.html')
+    return safe_render('protect_pdf.html')
 
-# FIXED: ???? ?? ???? ???? ???? ??????? ???? ???????? ????? ?? ??????? ?? ???? ??
 @app.route('/rotate-pdf')
 def rotate_pdf_page():
-    return render_template('rotate_pdf.html')
+    return safe_render('rotate_pdf.html')
 
 @app.route('/resize-image')
 def resize_image_page(): 
-    return render_template('resize_image.html')
+    return safe_render('resize_image.html')
 
 @app.route('/compress-image')
 def compress_image_page(): 
-    return render_template('compress_image.html')
+    return safe_render('compress_image.html')
 
 @app.route('/convert-image')
 def convert_image_page(): 
-    return render_template('convert_image.html')
+    return safe_render('convert_image.html')
 
 @app.route('/blur-to-clear')
 def blur_to_clear_page():
-    return render_template('blur_to_clear.html')
+    return safe_render('blur_to_clear.html')
 
 
 # ==========================================
@@ -263,12 +298,13 @@ def api_split_pdf():
         total_pages = len(reader.pages)
         if method == 'custom' and ranges:
             for part in ranges.split(','):
-                if '-' in part:
-                    start, end = map(int, part.split('-'))
-                    for idx in range(start-1, min(end, total_pages)): writer.add_page(reader.pages[idx])
-                else:
-                    idx = int(part.strip()) - 1
-                    if 0 <= idx < total_pages: writer.add_page(reader.pages[idx])
+                if Part := part.strip():
+                    if '-' in Part:
+                        start, end = map(int, Part.split('-'))
+                        for idx in range(start-1, min(end, total_pages)): writer.add_page(reader.pages[idx])
+                    else:
+                        idx = int(Part) - 1
+                        if 0 <= idx < total_pages: writer.add_page(reader.pages[idx])
         else:
             writer.add_page(reader.pages[0])
         with open(out_path, 'wb') as f: writer.write(f)
@@ -277,23 +313,66 @@ def api_split_pdf():
     finally:
         if os.path.exists(pdf_path): os.remove(pdf_path)
 
-# 7. TOOL: BLUR TO CLEAR AI
+import io
+from flask import send_file, jsonify
+
+# 7. TOOL: BLUR TO CLEAR AI (MEMORY-BUFFER ENGINE - 0% PERMISSION ERRORS)
 @app.route('/api/blur-to-clear', methods=['POST'])
 def api_blur_to_clear():
-    if 'file' not in request.files: return "No file uploaded", 400
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
     file = request.files['file']
-    img_path = os.path.join(UPLOAD_FOLDER, file.filename)
-    out_path = os.path.join(OUTPUT_FOLDER, 'cleared_' + file.filename)
-    file.save(img_path)
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
     try:
-        img = cv2.imread(img_path)
-        gaussian_blur = cv2.GaussianBlur(img, (0, 0), 3)
-        sharpened = cv2.addWeighted(img, 1.5, gaussian_blur, -0.5, 0)
-        cv2.imwrite(out_path, sharpened)
-        return send_file(out_path, as_attachment=True)
-    except Exception as e: return f"Image processing error: {str(e)}", 500
-    finally:
-        if os.path.exists(img_path): os.remove(img_path)
+        # 1. Read file directly into RAM memory buffer (No disk lock issues)
+        file_bytes = file.read()
+        nparr = np.frombuffer(file_bytes, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        if img is None:
+            return jsonify({"error": "Invalid image file format"}), 400
+
+        # 2. Stage 1: CLAHE (Contrast Limited Adaptive Histogram Equalization)
+        # This recovers hidden details from blurry regions
+        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+        l, a, b = cv2.split(lab)
+        clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+        l_clahe = clahe.apply(l)
+        enhanced_bgr = cv2.cvtColor(cv2.merge((l_clahe, a, b)), cv2.COLOR_LAB2BGR)
+
+        # 3. Stage 2: Bilateral Denoising + Unsharp Sharpness Mask
+        denoised = cv2.bilateralFilter(enhanced_bgr, 7, 50, 50)
+        gaussian = cv2.GaussianBlur(denoised, (0, 0), 2.0)
+        sharpened = cv2.addWeighted(denoised, 2.2, gaussian, -1.2, 0)
+
+        # 4. Stage 3: PIL Sharpness & Contrast Boost
+        img_rgb = cv2.cvtColor(sharpened, cv2.COLOR_BGR2RGB)
+        pil_img = Image.fromarray(img_rgb)
+
+        sharp_enhancer = ImageEnhance.Sharpness(pil_img)
+        pil_img = sharp_enhancer.enhance(2.2)
+
+        contrast_enhancer = ImageEnhance.Contrast(pil_img)
+        pil_img = contrast_enhancer.enhance(1.2)
+
+        # 5. Convert processed image back to Byte Stream (No file saving to disk needed)
+        output_buffer = io.BytesIO()
+        pil_img.save(output_buffer, format='JPEG', quality=95)
+        output_buffer.seek(0)
+
+        return send_file(
+            output_buffer,
+            mimetype='image/jpeg',
+            as_attachment=True,
+            download_name='cleared_image.jpg'
+        )
+
+    except Exception as e:
+        app.logger.error(f"Blur to Clear Error: {str(e)}")
+        return jsonify({"error": f"Image enhancement failed: {str(e)}"}), 500
 
 # 8. TOOL: FULL HD PHOTO UPSCALER
 @app.route('/api/full-hd-photo', methods=['POST'])
