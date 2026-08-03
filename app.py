@@ -1,10 +1,11 @@
 import os
+import io
 import uuid
 import cv2
 import requests
 import numpy as np
 from PIL import Image, ImageEnhance
-from flask import Flask, request, send_file, render_template, jsonify, make_response
+from flask import Flask, request, send_file, render_template, jsonify, make_response, send_from_directory
 from werkzeug.utils import secure_filename
 from pypdf import PdfReader, PdfWriter
 from pdf2docx import Converter
@@ -54,6 +55,12 @@ def safe_render(template_name):
     template_path = os.path.join(app.root_path, 'templates', template_name)
     with open(template_path, 'r', encoding='utf-8', errors='ignore') as f:
         return f.read()
+
+# FAVICON ROUTE (Serves favicon.png from /static/)
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.png', mimetype='image/png')
 
 # ==========================================
 # TECHNICAL SEO: DYNAMIC ROBOTS.TXT & SITEMAP
@@ -313,9 +320,6 @@ def api_split_pdf():
     finally:
         if os.path.exists(pdf_path): os.remove(pdf_path)
 
-import io
-from flask import send_file, jsonify
-
 # 7. TOOL: BLUR TO CLEAR AI (MEMORY-BUFFER ENGINE - 0% PERMISSION ERRORS)
 @app.route('/api/blur-to-clear', methods=['POST'])
 def api_blur_to_clear():
@@ -327,7 +331,7 @@ def api_blur_to_clear():
         return jsonify({"error": "No file selected"}), 400
 
     try:
-        # 1. Read file directly into RAM memory buffer (No disk lock issues)
+        # Read file directly into RAM memory buffer (No disk lock issues)
         file_bytes = file.read()
         nparr = np.frombuffer(file_bytes, np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -335,20 +339,19 @@ def api_blur_to_clear():
         if img is None:
             return jsonify({"error": "Invalid image file format"}), 400
 
-        # 2. Stage 1: CLAHE (Contrast Limited Adaptive Histogram Equalization)
-        # This recovers hidden details from blurry regions
+        # Stage 1: CLAHE (Contrast Limited Adaptive Histogram Equalization)
         lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
         l, a, b = cv2.split(lab)
         clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
         l_clahe = clahe.apply(l)
         enhanced_bgr = cv2.cvtColor(cv2.merge((l_clahe, a, b)), cv2.COLOR_LAB2BGR)
 
-        # 3. Stage 2: Bilateral Denoising + Unsharp Sharpness Mask
+        # Stage 2: Bilateral Denoising + Unsharp Sharpness Mask
         denoised = cv2.bilateralFilter(enhanced_bgr, 7, 50, 50)
         gaussian = cv2.GaussianBlur(denoised, (0, 0), 2.0)
         sharpened = cv2.addWeighted(denoised, 2.2, gaussian, -1.2, 0)
 
-        # 4. Stage 3: PIL Sharpness & Contrast Boost
+        # Stage 3: PIL Sharpness & Contrast Boost
         img_rgb = cv2.cvtColor(sharpened, cv2.COLOR_BGR2RGB)
         pil_img = Image.fromarray(img_rgb)
 
@@ -358,7 +361,7 @@ def api_blur_to_clear():
         contrast_enhancer = ImageEnhance.Contrast(pil_img)
         pil_img = contrast_enhancer.enhance(1.2)
 
-        # 5. Convert processed image back to Byte Stream (No file saving to disk needed)
+        # Convert processed image back to Byte Stream (No file saving needed)
         output_buffer = io.BytesIO()
         pil_img.save(output_buffer, format='JPEG', quality=95)
         output_buffer.seek(0)
@@ -470,7 +473,8 @@ def api_protect_pdf():
         with open(out_p, 'wb') as f: w.write(f)
         return send_file(out_p, as_attachment=True)
     except: return "Security processing failed", 500
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 # 13. API: UNLOCK PDF
 @app.route('/api/unlock-pdf', methods=['POST'])
@@ -488,7 +492,8 @@ def api_unlock_pdf():
         with open(out_p, 'wb') as f: w.write(f)
         return send_file(out_p, as_attachment=True)
     except: return "Decryption failed. Verify key.", 400
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 # 14. API: ROTATE PDF
 @app.route('/api/rotate-pdf', methods=['POST'])
@@ -506,7 +511,8 @@ def api_rotate_pdf():
         with open(out_p, 'wb') as f: w.write(f)
         return send_file(out_p, mimetype='application/pdf', as_attachment=True)
     except: return "Matrix rotation layout anomaly", 500
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 # 15. API: RESIZE IMAGE
 @app.route('/api/resize-image', methods=['POST'])
@@ -523,7 +529,8 @@ def api_resize_image():
             resized.save(out_p, quality=95)
         return send_file(out_p, as_attachment=True)
     except: return "Spatial adjustments failed", 500
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 # 16. API: COMPRESS IMAGE
 @app.route('/api/compress-image', methods=['POST'])
@@ -537,7 +544,8 @@ def api_compress_image():
         with Image.open(in_p) as img: img.save(out_p, optimize=True, quality=q)
         return send_file(out_p, as_attachment=True)
     except: return "Footprint reduction dropped", 500
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 # 17. API: CONVERT IMAGE
 @app.route('/api/convert-image', methods=['POST'])
@@ -554,7 +562,8 @@ def api_convert_image():
             img.save(out_p, fmt, quality=95)
         return send_file(out_p, as_attachment=True)
     except: return "Transcoding stream dropped", 500
-    finally: os.remove(in_p)
+    finally: 
+        if os.path.exists(in_p): os.remove(in_p)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
