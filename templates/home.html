@@ -11,12 +11,17 @@
     <meta name="author" content="LikePDF">
     <meta name="robots" content="index, follow">
 
+    <!-- Explicit Absolute Favicon Links -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png?v=3">
+    <link rel="shortcut icon" type="image/png" href="/static/favicon.png?v=3">
+    <link rel="apple-touch-icon" href="/static/favicon.png?v=3">
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "LikePDF",
-      "url": "https://likepdf.com/",
+      "url": "https://likepdf.in/",
       "description": "Free PDF & Image Tools That Actually Respect Your Files. No signup, no watermark, files auto-deleted after 60 minutes.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "All",
@@ -30,15 +35,15 @@
 
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #03030a; min-height: 100vh; perspective: 1500px; }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
         #quantumMesh { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
         .glass-nav { background: rgba(4, 4, 12, 0.75); backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
         .glass-footer { background: rgba(6, 6, 18, 0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
         .card-4d { background: rgba(13, 15, 26, 0.75); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); transition: transform 0.2s ease, border-color 0.3s ease; }
-        .card-4d:hover { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9); }
+        .card-4d:hover { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.9); transform: translateY(-3px); }
     </style>
 </head>
-<body class="flex flex-col items-center justify-start text-slate-300 min-h-screen relative select-none">
+<body class="flex flex-col items-center justify-start text-slate-300 min-h-screen relative">
 
     <div id="canvas-container"><canvas id="quantumMesh"></canvas></div>
 
@@ -238,12 +243,82 @@
 
     <!-- Background Quantum Animation Script -->
     <script>
-        const canvas = document.getElementById('quantumMesh'); const ctx = canvas.getContext('2d'); let particles = []; let mouse = { x: null, y: null, radius: 180 };
-        function resize() { canvas.width = window.innerWidth; canvas.height = document.body.scrollHeight; init(); }
-        class Node { constructor(x, y) { this.x = x; this.y = y; this.baseX = x; this.baseY = y; this.size = Math.random() * 2.5 + 2.5; this.density = (Math.random() * 40) + 15; this.color = Math.random() > 0.4 ? 'rgba(236, 72, 153, 0.65)' : 'rgba(139, 92, 246, 0.55)'; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); } update() { let dx = mouse.x - this.x; let dy = mouse.y - this.y; let distance = Math.hypot(dx, dy); if (distance < mouse.radius) { let force = (mouse.radius - distance) / mouse.radius; this.x -= (dx / distance) * force * this.density; this.y -= (dy / distance) * force * this.density; } else { this.x -= (this.x - this.baseX) / 12; this.y -= (this.y - this.baseY) / 12; } } }
-        function init() { particles = []; let count = (canvas.width * canvas.height) / 6000; if (count > 450) count = 450; for (let i = 0; i < count; i++) { particles.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height)); } }
-        function renderLoop() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); for (let j = i; j < particles.length; j++) { let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y); if (dist < 100) { ctx.beginPath(); ctx.strokeStyle = `rgba(236, 72, 153, ${0.25 - (dist/100)*0.25})`; ctx.lineWidth = 0.8; ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); } } } requestAnimationFrame(renderLoop); }
-        window.addEventListener('resize', resize); window.addEventListener('mousemove', (e) => { mouse.x = e.pageX; mouse.y = e.pageY; }); resize(); renderLoop();
+        const canvas = document.getElementById('quantumMesh'); 
+        const ctx = canvas.getContext('2d'); 
+        let particles = []; 
+        let mouse = { x: null, y: null, radius: 180 };
+
+        function resize() { 
+            canvas.width = window.innerWidth; 
+            canvas.height = Math.max(document.body.scrollHeight, window.innerHeight); 
+            init(); 
+        }
+
+        class Node { 
+            constructor(x, y) { 
+                this.x = x; this.y = y; this.baseX = x; this.baseY = y; 
+                this.size = Math.random() * 2.5 + 2.5; 
+                this.density = (Math.random() * 40) + 15; 
+                this.color = Math.random() > 0.4 ? 'rgba(236, 72, 153, 0.65)' : 'rgba(139, 92, 246, 0.55)'; 
+            } 
+            draw() { 
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fillStyle = this.color; 
+                ctx.fill(); 
+            } 
+            update() { 
+                let dx = mouse.x - this.x; 
+                let dy = mouse.y - this.y; 
+                let distance = Math.hypot(dx, dy); 
+                if (distance < mouse.radius) { 
+                    let force = (mouse.radius - distance) / mouse.radius; 
+                    this.x -= (dx / distance) * force * this.density; 
+                    this.y -= (dy / distance) * force * this.density; 
+                } else { 
+                    this.x -= (this.x - this.baseX) / 12; 
+                    this.y -= (this.y - this.baseY) / 12; 
+                } 
+            } 
+        }
+
+        function init() { 
+            particles = []; 
+            let count = (canvas.width * canvas.height) / 7000; 
+            if (count > 350) count = 350; 
+            for (let i = 0; i < count; i++) { 
+                particles.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height)); 
+            } 
+        }
+
+        function renderLoop() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            for (let i = 0; i < particles.length; i++) { 
+                particles[i].update(); 
+                particles[i].draw(); 
+                for (let j = i; j < particles.length; j++) { 
+                    let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y); 
+                    if (dist < 100) { 
+                        ctx.beginPath(); 
+                        ctx.strokeStyle = `rgba(236, 72, 153, ${0.2 - (dist/100)*0.2})`; 
+                        ctx.lineWidth = 0.8; 
+                        ctx.moveTo(particles[i].x, particles[i].y); 
+                        ctx.lineTo(particles[j].x, particles[j].y); 
+                        ctx.stroke(); 
+                    } 
+                } 
+            } 
+            requestAnimationFrame(renderLoop); 
+        }
+
+        window.addEventListener('resize', resize); 
+        window.addEventListener('mousemove', (e) => { 
+            mouse.x = e.pageX; 
+            mouse.y = e.pageY; 
+        }); 
+        
+        resize(); 
+        renderLoop();
     </script>
 </body>
 </html>
