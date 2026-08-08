@@ -93,6 +93,11 @@ def sitemap_xml():
     response.headers["Content-Type"] = "application/xml"
     return response
 
+# Google Search Console Ownership Verification Route
+@app.route('/google53035f8b66856dae.html')
+def google_verification():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'google53035f8b66856dae.html')
+
 
 # ==========================================
 # PAGE ROUTERS (USES SAFE UTF-8 RENDERER)
