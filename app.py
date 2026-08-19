@@ -76,24 +76,46 @@ def robots_txt():
 @app.route('/sitemap.xml')
 def sitemap_xml():
     today = datetime.now().strftime('%Y-%m-%d')
-    urls = [
-        "", "pdf-to-word", "compress-pdf", "excel-to-pdf", "jpg-to-pdf",
-        "merge-pdf", "split-pdf", "full-hd-photo", "ai-layout-fixer",
-        "watermark-remover", "auto-sorter", "unlock-pdf", "protect-pdf",
-        "rotate-pdf", "resize-image", "compress-image", "convert-image", "blur-to-clear"
+    
+    # Priority routes for search crawlers
+    pages = [
+        {"url": "", "priority": "1.0", "change": "daily"},
+        {"url": "compress-pdf", "priority": "0.9", "change": "weekly"},
+        {"url": "pdf-to-word", "priority": "0.9", "change": "weekly"},
+        {"url": "merge-pdf", "priority": "0.9", "change": "weekly"},
+        {"url": "split-pdf", "priority": "0.8", "change": "weekly"},
+        {"url": "blur-to-clear", "priority": "0.9", "change": "weekly"},
+        {"url": "full-hd-photo", "priority": "0.8", "change": "weekly"},
+        {"url": "excel-to-pdf", "priority": "0.8", "change": "weekly"},
+        {"url": "jpg-to-pdf", "priority": "0.8", "change": "weekly"},
+        {"url": "unlock-pdf", "priority": "0.8", "change": "weekly"},
+        {"url": "protect-pdf", "priority": "0.8", "change": "weekly"},
+        {"url": "watermark-remover", "priority": "0.7", "change": "weekly"},
+        {"url": "rotate-pdf", "priority": "0.7", "change": "weekly"},
+        {"url": "resize-image", "priority": "0.7", "change": "weekly"},
+        {"url": "compress-image", "priority": "0.7", "change": "weekly"},
+        {"url": "convert-image", "priority": "0.7", "change": "weekly"}
     ]
+    
     xml_content = '<?xml version="1.0" encoding="UTF-8"?>\n'
     xml_content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for url in urls:
-        loc = f"https://likepdf.com/{url}" if url else "https://likepdf.com/"
-        priority = "1.0" if not url else "0.8"
-        xml_content += f'  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>{priority}</priority>\n  </url>\n'
+    
+    for page in pages:
+        loc = f"https://likepdf.in/{page['url']}" if page['url'] else "https://likepdf.in/"
+        xml_content += f'  <url>\n'
+        xml_content += f'    <loc>{loc}</loc>\n'
+        xml_content += f'    <lastmod>{today}</lastmod>\n'
+        xml_content += f'    <changefreq>{page["change"]}</changefreq>\n'
+        xml_content += f'    <priority>{page["priority"]}</priority>\n'
+        xml_content += f'  </url>\n'
+        
     xml_content += '</urlset>'
+    
     response = make_response(xml_content)
     response.headers["Content-Type"] = "application/xml"
     return response
-
-# Google Search Console Ownership Verification Route
+ 
+   # Google Search Console Ownership Verification Route
 @app.route('/google53035f8b66856dae.html')
 def google_verification():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'google53035f8b66856dae.html')
@@ -177,6 +199,18 @@ def convert_image_page():
 @app.route('/blur-to-clear')
 def blur_to_clear_page():
     return safe_render('blur_to_clear.html')
+
+@app.route('/privacy-policy')
+def privacy_policy_page():
+    return safe_render('privacy_policy.html')
+
+@app.route('/terms-of-service')
+def terms_of_service_page():
+    return safe_render('terms_of_service.html')
+
+@app.route('/contact')
+def contact_page():
+    return safe_render('contact.html')
 
 
 # ==========================================
