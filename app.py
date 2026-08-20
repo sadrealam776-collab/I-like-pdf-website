@@ -212,10 +212,69 @@ def terms_of_service_page():
 def contact_page():
     return safe_render('contact.html')
 
+# Route : Page Router
+@app.route('/unlock-pdf-without-password')
+def unlock_without_password_page():
+    return safe_render('unlock_without_password.html')
+
 
 # ==========================================
 # BACKEND API PROCESSING ROUTINES
 # ==========================================
+
+
+
+# Route 1: Backend API (Bypasses Permissions & Tries Empty/Default Decryption)
+@app.route('/api/unlock-without-password', methods=['POST'])
+def api_unlock_without_password():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+
+    try:
+        file_bytes = io.BytesIO(file.read())
+        reader = PdfReader(file_bytes)
+        writer = PdfWriter()
+
+        # Check if file is encrypted
+        if reader.is_encrypted:
+            # Try decrypting with blank password (removes standard owner/permissions locks)
+            decrypted = False
+            for test_key in ["", " "]:
+                try:
+                    if reader.decrypt(test_key) > 0:
+                        decrypted = True
+                        break
+                except Exception:
+                    continue
+
+            if not decrypted:
+                return jsonify({
+                    "error": "This file is protected with strong Open/Read encryption (AES-256). Opening password is required."
+                }), 400
+
+        # Copy all pages into a fresh, unencrypted PDF
+        for page in reader.pages:
+            writer.add_page(page)
+
+        output_buffer = io.BytesIO()
+        writer.write(output_buffer)
+        output_buffer.seek(0)
+
+        return send_file(
+            output_buffer,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"unlocked_{secure_filename(file.filename)}"
+        )
+
+    except Exception as e:
+        app.logger.error(f"Unlock without password error: {str(e)}")
+        return jsonify({"error": "Failed to process PDF restrictions."}), 500
+
 
 # 1. TOOL: PDF TO WORD
 @app.route('/api/pdf-to-word', methods=['POST'])
