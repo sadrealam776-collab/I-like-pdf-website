@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LikePDF - Free PDF & Image Tools</title>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png?v=3">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .tool-card {
+            transition: all 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-2px);
+            border-color: #0284c7;
+            box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.08);
+        }
+        .brand-logo-box {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
+        }
+        /* Custom scrollbar for vertical action options list */
+        .custom-vertical-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-vertical-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-vertical-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header Navbar with Blogger Option on Right -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between shadow-xs">
+        <a href="/" class="flex items-center gap-3 group">
+            <div class="brand-logo-box w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-extrabold text-slate-900 text-lg tracking-tight leading-tight">LikePDF</span>
+                <span class="text-[9px] font-extrabold tracking-widest text-pink-600 uppercase">FREE PDF & IMAGE TOOLS</span>
+            </div>
+        </a>
+
+        <nav class="flex items-center gap-6 text-sm font-semibold text-slate-600">
+            <a href="#pdfTools" class="hover:text-sky-600 transition">PDF Tools</a>
+            <a href="#imageTools" class="hover:text-sky-600 transition">Image Tools</a>
+            <a href="#blogSection" class="hover:text-sky-600 transition">Blog</a>
+            <a href="/edit-pdf" class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">Live Editor</a>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-8 space-y-12">
+
+        <!-- Hero Section = Action Drop Area -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-8 md:p-12 text-center shadow-xs relative overflow-hidden">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">Free PDF and image tools</h1>
+            <p class="text-slate-500 text-sm md:text-base mb-8">No signup. No watermark. Files deleted in 60 min.</p>
+
+            <!-- Default Upload Box -->
+            <div id="dropZoneContainer" class="max-w-xl mx-auto border-2 border-dashed border-sky-400 bg-sky-50/40 hover:bg-sky-50 rounded-2xl p-8 transition flex flex-col items-center cursor-pointer mb-6 relative" onclick="document.getElementById('heroFileInput').click()">
+                <div class="w-14 h-14 bg-sky-500 text-white rounded-2xl flex items-center justify-center text-xl mb-3 shadow-md">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-800 mb-1">Drop your file here</h3>
+                <p class="text-xs text-slate-500 mb-4">or click to browse from your device</p>
+                <span class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-6 py-2.5 rounded-xl transition shadow-sm inline-block">
+                    Choose file
+                </span>
+                <input type="file" id="heroFileInput" class="hidden" accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png" onchange="handleFileLoaded(this)">
+            </div>
+
+            <!-- Dynamic Post-Upload White Action Hub -->
+            <div id="postUploadActionHub" class="max-w-xl mx-auto bg-white border border-slate-200 text-slate-900 rounded-2xl p-6 shadow-xl hidden text-left space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-file-circle-check"></i>
+                        </div>
+                        <div>
+                            <h4 id="uploadedFileNameLabel" class="text-xs font-bold text-slate-800 truncate max-w-[240px]">document.pdf</h4>
+                            <span class="text-[10px] text-slate-400">Ready for instant action</span>
+                        </div>
+                    </div>
+                    <button onclick="resetUploadState()" class="text-xs text-sky-600 hover:text-sky-700 underline font-semibold">Change file</button>
+                </div>
+
+                <p class="text-xs font-semibold text-slate-600">Choose what you want to do with this file:</p>
+                
+                <!-- Vertical Scrolling Top-to-Bottom List with White Background Theme -->
+                <div class="custom-vertical-scroll max-h-[300px] overflow-y-auto space-y-2 pr-1">
+                    
+                    <!-- 1. ONLINE EDITING TOOL ALWAYS FIXED AT THE TOP -->
+                    <a href="/edit-pdf" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white p-3.5 rounded-xl flex items-center justify-between transition shadow-md group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-bold">Edit in Studio (Online Editor)</h5>
+                                <p class="text-[10px] text-sky-100">Modify text, add sentences, signatures & images</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-sky-200 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                    <!-- 2. Remove PDF Watermark -->
+                    <a href="/watermark-remover" class="bg-slate-50 hover:bg-slate-100 text-slate-800 p-3 rounded-xl flex items-center justify-between border border-slate-200 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-eraser"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-slate-900">Remove PDF Watermark</h5>
+                                <p class="text-[10px] text-slate-500">Strip background watermarks and annotations</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                    <!-- 3. Excel to PDF -->
+                    <a href="/excel-to-pdf" class="bg-slate-50 hover:bg-slate-100 text-slate-800 p-3 rounded-xl flex items-center justify-between border border-slate-200 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-file-excel"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-slate-900">Excel to PDF</h5>
+                                <p class="text-[10px] text-slate-500">Convert spreadsheets into formatted pages</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                    <!-- 4. Compress PDF -->
+                    <a href="/compress-pdf" class="bg-slate-50 hover:bg-slate-100 text-slate-800 p-3 rounded-xl flex items-center justify-between border border-slate-200 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-compress"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-slate-900">Compress PDF</h5>
+                                <p class="text-[10px] text-slate-500">Shrink file size efficiently</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                    <!-- 5. Convert to Word -->
+                    <a href="/pdf-to-word" class="bg-slate-50 hover:bg-slate-100 text-slate-800 p-3 rounded-xl flex items-center justify-between border border-slate-200 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-file-word"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-slate-900">PDF to Word</h5>
+                                <p class="text-[10px] text-slate-500">Convert document layout to editable DOCX</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                    <!-- 6. Unlock PDF -->
+                    <a href="/unlock-pdf" class="bg-slate-50 hover:bg-slate-100 text-slate-800 p-3 rounded-xl flex items-center justify-between border border-slate-200 transition group">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-lock-open"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-slate-900">Unlock PDF</h5>
+                                <p class="text-[10px] text-slate-500">Remove passwords or permission restrictions</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+                    </a>
+
+                </div>
+            </div>
+
+            <!-- Trust Strip -->
+            <div class="inline-flex items-center gap-3 text-xs font-semibold text-slate-500 bg-slate-50 px-4 py-2 rounded-full border border-slate-200 mt-6">
+                <span><i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i> Secure upload</span>
+                <span>•</span>
+                <span><i class="fa-solid fa-clock-rotate-left text-sky-500 mr-1"></i> Auto-delete</span>
+                <span>•</span>
+                <span><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Free forever</span>
+            </div>
+        </section>
+
+        <!-- HIGH-PRIORITY HIGHLIGHT FEATURE: ONLINE PDF EDITING -->
+        <section class="bg-gradient-to-r from-sky-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div class="absolute right-0 bottom-0 opacity-10 translate-x-8 translate-y-8 text-9xl">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <div class="space-y-2 z-10 text-center md:text-left">
+                <span class="bg-sky-400/30 text-sky-200 text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-sky-400/30">Featured Tool</span>
+                <h2 class="text-2xl font-bold">Direct Online PDF & Document Editor</h2>
+                <p class="text-sky-100 text-xs md:text-sm max-w-lg">Click directly on any word, sentence, or format in your PDF or resume. Edit in-place, add signatures, insert images, or add pages instantly without software.</p>
+            </div>
+            <a href="/edit-pdf" class="z-10 bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs px-8 py-3.5 rounded-2xl shadow-lg hover:scale-105 transition-all inline-flex items-center gap-2 whitespace-nowrap">
+                <i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i> Open Live Editor
+            </a>
+        </section>
+
+        <!-- PDF Tools Grid (Including Excel to PDF & Watermark Remover) -->
+        <section id="pdfTools" class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900 px-1">PDF tools</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <a href="/edit-pdf" class="tool-card bg-white border border-sky-300 rounded-2xl p-5 flex flex-col gap-2 ring-2 ring-sky-100">
+                    <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-base"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Online PDF Editor</h3>
+                    <p class="text-xs text-slate-500">Edit text & add images</p>
+                </a>
+
+                <a href="/watermark-remover" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-base"><i class="fa-solid fa-eraser"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Remove Watermark</h3>
+                    <p class="text-xs text-slate-500">Strip stamps & marks</p>
+                </a>
+
+                <a href="/excel-to-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-file-excel"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Excel to PDF</h3>
+                    <p class="text-xs text-slate-500">Spreadsheets to pages</p>
+                </a>
+
+                <a href="/merge-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base"><i class="fa-solid fa-object-ungroup"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Merge PDF</h3>
+                    <p class="text-xs text-slate-500">Combine files into one</p>
+                </a>
+
+                <a href="/split-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-base"><i class="fa-solid fa-scissors"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Split PDF</h3>
+                    <p class="text-xs text-slate-500">Extract single pages</p>
+                </a>
+
+                <a href="/compress-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-compress"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Compress PDF</h3>
+                    <p class="text-xs text-slate-500">Shrink file size</p>
+                </a>
+
+                <a href="/pdf-to-word" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base"><i class="fa-solid fa-file-word"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">PDF to Word</h3>
+                    <p class="text-xs text-slate-500">Make it editable</p>
+                </a>
+
+                <a href="/jpg-to-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-base"><i class="fa-solid fa-file-image"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">JPG to PDF</h3>
+                    <p class="text-xs text-slate-500">Images into one PDF</p>
+                </a>
+
+                <a href="/protect-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base"><i class="fa-solid fa-lock"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Protect PDF</h3>
+                    <p class="text-xs text-slate-500">Add a password</p>
+                </a>
+
+                <a href="/unlock-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-base"><i class="fa-solid fa-lock-open"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Unlock PDF</h3>
+                    <p class="text-xs text-slate-500">Remove a password</p>
+                </a>
+
+                <a href="/rotate-pdf" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-base"><i class="fa-solid fa-rotate"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Rotate PDF</h3>
+                    <p class="text-xs text-slate-500">Fix page direction</p>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Image Tools Grid -->
+        <section id="imageTools" class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900 px-1">Image tools</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <a href="/resize-image" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-expand"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Resize image</h3>
+                    <p class="text-xs text-slate-500">Set exact dimensions</p>
+                </a>
+
+                <a href="/compress-image" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base"><i class="fa-solid fa-image"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Compress image</h3>
+                    <p class="text-xs text-slate-500">Reduce file size</p>
+                </a>
+
+                <a href="/convert-image" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base"><i class="fa-solid fa-arrows-rotate"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Convert image</h3>
+                    <p class="text-xs text-slate-500">JPG, PNG, WebP</p>
+                </a>
+
+                <a href="/full-hd-photo" class="tool-card bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-base"><i class="fa-solid fa-wand-magic"></i></div>
+                    <h3 class="font-bold text-slate-800 text-sm">Upscale image</h3>
+                    <p class="text-xs text-slate-500">Low res to HD</p>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="bg-white border border-slate-200 rounded-3xl p-8 shadow-xs space-y-4">
+            <h2 class="text-base font-bold text-slate-900">Why your files are safe</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-600">
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-shield-check text-sky-500 mr-1.5"></i> Encrypted Uploads</h4>
+                    <p>All files transfer over secure 256-bit SSL encryption, ensuring your documents remain private.</p>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-trash-can text-sky-500 mr-1.5"></i> Automatic Deletion</h4>
+                    <p>Files are purged permanently from our isolated cloud servers within 60 minutes after processing.</p>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-user-slash text-sky-500 mr-1.5"></i> No Account Needed</h4>
+                    <p>Use any tool instantly without registering an account, providing your email, or subscribing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEO Content / From the Blog -->
+        <section id="blogSection" class="bg-white border border-slate-200 rounded-3xl p-8 shadow-xs space-y-4">
+            <h2 class="text-base font-bold text-slate-900">From the blog</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-sky-300 transition cursor-pointer">
+                    <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Guide</span>
+                    <h4 class="font-bold text-slate-800 text-sm mt-1 mb-1">How to Edit Text in a PDF Online Without Acrobat</h4>
+                    <p class="text-slate-500 text-[11px]">Learn how to modify paragraphs, dates, and names directly in your browser...</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-sky-300 transition cursor-pointer">
+                    <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Security</span>
+                    <h4 class="font-bold text-slate-800 text-sm mt-1 mb-1">Are Online PDF Converters Safe for Confidential Files?</h4>
+                    <p class="text-slate-500 text-[11px]">Understanding file encryption, auto-deletion policies, and privacy protocols...</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-sky-300 transition cursor-pointer">
+                    <span class="text-[10px] font-bold text-sky-600 uppercase tracking-wider">Tips</span>
+                    <h4 class="font-bold text-slate-800 text-sm mt-1 mb-1">How to Convert Scanned PDF Receipts into Word Documents</h4>
+                    <p class="text-slate-500 text-[11px]">Step-by-step instructions on running OCR to extract editable text accurately...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Internal Links -->
+    <footer class="w-full bg-white border-t border-slate-200 mt-16 py-8 px-6 text-center text-xs text-slate-500 space-y-3">
+        <div class="flex flex-wrap items-center justify-center gap-6 font-semibold">
+            <a href="/" class="hover:text-slate-800 transition">All tools</a>
+            <a href="/privacy-policy" class="hover:text-slate-800 transition">Privacy</a>
+            <a href="/terms-of-service" class="hover:text-slate-800 transition">Terms</a>
+            <a href="/contact" class="hover:text-slate-800 transition">Contact</a>
+        </div>
+        <p>© 2026 LikePDF.in — Fast, secure document and image processing.</p>
+    </footer>
+
+    <!-- Script for Vertical Scrolling Upload Action Hub -->
+    <script>
+        function handleFileLoaded(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('uploadedFileNameLabel').textContent = file.name;
+                document.getElementById('dropZoneContainer').classList.add('hidden');
+                document.getElementById('postUploadActionHub').classList.remove('hidden');
+            }
+        }
+
+        function resetUploadState() {
+            document.getElementById('heroFileInput').value = '';
+            document.getElementById('postUploadActionHub').classList.add('hidden');
+            document.getElementById('dropZoneContainer').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

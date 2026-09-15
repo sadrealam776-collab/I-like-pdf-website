@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Edit PDF Online - Free PDF Editor & Document Modifier | LikePDF</title>
+    <meta name="description" content="Edit PDF files online for free. Modify text, add sentences, insert images and signatures, and download edited PDFs securely with zero registration or watermarks." />
+    <meta name="keywords" content="edit pdf online, free pdf editor, modify pdf text, add text to pdf, fill pdf forms, online document editor" />
+    <link rel="canonical" href="https://likepdf.in/edit-pdf" />
+    
+    <!-- Open Graph / Social Media SEO -->
+    <meta property="og:title" content="Edit PDF Online - Free PDF Editor | LikePDF" />
+    <meta property="og:description" content="Modify PDF text, add signatures, and edit documents online securely in your browser." />
+    <meta property="og:url" content="https://likepdf.in/edit-pdf" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png?v=3">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #f8fafc;
+            color: #1e293b;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .studio-top-bar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .brand-logo-box {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
+        }
+
+        .studio-tool-btn {
+            height: 32px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+        .studio-tool-btn:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+        .studio-tool-btn.active {
+            color: #0284c7;
+            background: #e0f2fe;
+            border-color: #38bdf8;
+        }
+
+        .dock-separator {
+            height: 18px;
+            width: 1px;
+            background: #cbd5e1;
+            margin: 0 4px;
+        }
+
+        .studio-viewport {
+            height: calc(100vh - 65px);
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px 80px 20px;
+            background: #f1f5f9;
+        }
+
+        .zoom-stage-wrapper {
+            transform-origin: top center;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .studio-canvas-sheet {
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            border-radius: 2px;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        .sheet-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+        }
+
+        .sheet-interactive-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .text-target-box {
+            position: absolute;
+            background: transparent;
+            color: transparent;
+            cursor: pointer;
+            box-sizing: border-box;
+            user-select: none;
+            transition: background 0.1s ease;
+        }
+        .text-target-box:hover {
+            background: rgba(56, 189, 248, 0.25) !important;
+            outline: 1px dashed #0284c7;
+        }
+
+        .studio-live-input {
+            position: absolute;
+            background: #ffffff !important;
+            color: #000000;
+            border: 1.5px solid #0284c7 !important;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-family: Arial, sans-serif;
+            line-height: 1.0 !important;
+            padding: 0 1px !important;
+            margin: 0 !important;
+            border-radius: 1px;
+            z-index: 100;
+            box-sizing: border-box;
+            white-space: pre;
+        }
+
+        .studio-text-patch {
+            position: absolute;
+            background: #ffffff !important;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            line-height: 1.0 !important;
+            padding: 0 1px !important;
+            margin: 0 !important;
+            border: none !important;
+            outline: none !important;
+            cursor: pointer;
+            z-index: 25;
+            white-space: pre;
+            box-sizing: border-box;
+        }
+
+        .studio-text-patch:hover {
+            outline: 1px dashed #38bdf8 !important;
+        }
+
+        .studio-text-patch:hover .delete-cross, .media-item-box:hover .delete-cross {
+            display: flex;
+        }
+
+        .delete-cross {
+            display: none;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            border-radius: 9999px;
+            background: #ef4444;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: bold;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        .media-item-box {
+            position: absolute;
+            cursor: move;
+            border: 1.5px dashed #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
+            z-index: 40;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        .media-item-box img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <!-- Top Command Dock -->
+    <header class="studio-top-bar w-full px-5 py-2.5 flex items-center justify-between z-50">
+        <div class="flex items-center gap-3">
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="brand-logo-box w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-xs">
+                    <i class="fa-solid fa-layer-group text-sm"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-slate-900 text-sm tracking-tight leading-tight">LikePDF</span>
+                    <span class="text-[7px] font-extrabold tracking-widest text-pink-600 uppercase">FREE TOOLS</span>
+                </div>
+            </a>
+            <div class="h-4 w-[1px] bg-slate-200"></div>
+            <input id="documentTitle" type="text" value="Document_Editor" class="text-xs font-bold text-slate-700 bg-transparent border border-transparent hover:border-slate-300 focus:border-sky-500 rounded px-1 outline-none max-w-[160px] truncate">
+        </div>
+
+        <div id="studioControls" class="flex items-center gap-1.5 bg-slate-100 border border-slate-200 p-1 rounded-lg hidden">
+            <button onclick="switchMode('edit')" id="btnEditMode" class="studio-tool-btn active">
+                <i class="fa-solid fa-i-cursor text-xs"></i>
+                <span>Edit Text</span>
+            </button>
+            <button onclick="switchMode('insert')" id="btnInsertMode" class="studio-tool-btn">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Add Sentence</span>
+            </button>
+
+            <label for="imageUploadInput" class="studio-tool-btn cursor-pointer hover:text-sky-600">
+                <i class="fa-regular fa-image text-xs"></i>
+                <span>Add Photo</span>
+            </label>
+            <input type="file" id="imageUploadInput" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+
+            <button onclick="requestAddNewPage()" class="studio-tool-btn hover:text-emerald-600">
+                <i class="fa-solid fa-file-circle-plus text-xs"></i>
+                <span>New Page</span>
+            </button>
+
+            <div class="dock-separator"></div>
+
+            <button onclick="toggleFormat('bold')" id="btnBold" class="w-7 h-7 flex items-center justify-center rounded text-xs font-bold hover:bg-slate-200 text-slate-700">B</button>
+            <button onclick="toggleFormat('italic')" id="btnItalic" class="w-7 h-7 flex items-center justify-center rounded text-xs italic hover:bg-slate-200 text-slate-700">I</button>
+
+            <div class="flex items-center bg-white border border-slate-300 rounded px-1 py-0.5">
+                <button onclick="changeFontSize(-1)" class="w-5 h-5 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs font-bold">-</button>
+                <span id="fontSizeDisplay" class="w-6 text-center text-xs font-semibold text-slate-800">10</span>
+                <button onclick="changeFontSize(1)" class="w-5 h-5 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs font-bold">+</button>
+            </div>
+
+            <div class="flex items-center gap-1 bg-white border border-slate-300 rounded px-2 py-0.5">
+                <span class="text-[10px] text-slate-500">Color</span>
+                <input type="color" id="textColorPicker" value="#000000" onchange="handleColorChange(this.value)" class="w-4 h-4 rounded cursor-pointer bg-transparent border-0">
+            </div>
+
+            <div class="dock-separator"></div>
+
+            <div class="flex items-center gap-1 bg-white border border-slate-300 rounded p-0.5">
+                <button onclick="stepZoom(-0.15)" class="w-5 h-5 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs"><i class="fa-solid fa-minus"></i></button>
+                <span id="zoomPercentDisplay" class="text-[11px] font-semibold text-slate-700 px-1">100%</span>
+                <button onclick="stepZoom(0.15)" class="w-5 h-5 text-slate-600 hover:text-slate-900 flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></button>
+                <button onclick="setExplicitZoom(1.0)" class="px-1 text-[10px] text-sky-600 hover:text-sky-700 font-bold">1:1</button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="/#blogSection" class="text-xs font-semibold text-slate-600 hover:text-sky-600 transition">Blog</a>
+            <button onclick="downloadFinalPdf()" id="exportPdfBtn" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-xs">
+                <i class="fa-solid fa-download"></i> Save & Download
+            </button>
+        </div>
+    </header>
+
+    <!-- Upload Screen -->
+    <section id="uploadSection" class="flex-1 flex flex-col items-center justify-center px-4 bg-slate-50">
+        <div class="bg-white border border-slate-200 p-10 rounded-3xl flex flex-col items-center max-w-md w-full text-center shadow-sm">
+            <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-2xl mb-4 border border-sky-100">
+                <i class="fa-solid fa-file-arrow-up"></i>
+            </div>
+            <h1 class="text-base font-bold text-slate-900 mb-1">Online PDF Editor Studio</h1>
+            <p class="text-slate-500 text-xs mb-6">Import any PDF document or resume to edit text directly on the page layout.</p>
+            
+            <input type="file" id="primaryFileInput" accept=".pdf,.docx,.xlsx,.pptx,.jpg,.jpeg,.png" class="hidden" onchange="processFileUpload(this)">
+            <label for="primaryFileInput" class="bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-6 py-3 rounded-xl cursor-pointer transition-all shadow-sm inline-block">
+                Choose Document File
+            </label>
+        </div>
+    </section>
+
+    <!-- Processing Modal -->
+    <div id="processingModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 hidden">
+        <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-xl flex items-center gap-3">
+            <div class="w-5 h-5 border-2 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-semibold text-slate-700" id="processingStatusText">Processing...</span>
+        </div>
+    </div>
+
+    <!-- Workspace -->
+    <main id="editorViewportArea" class="studio-viewport hidden">
+        <div class="zoom-stage-wrapper" id="zoomStage"></div>
+    </main>
+
+    <script>
+        let currentSessionId = null;
+        let activeZoom = 1.0;
+        let currentMode = 'edit'; 
+
+        let currentFontSize = 10;
+        let currentTextColor = '#000000';
+        let isBold = false;
+        let isItalic = false;
+
+        let modifiedEdits = {}; 
+        let newCustomTexts = {}; 
+        let insertedImages = []; 
+
+        function toggleFormat(type) {
+            if (type === 'bold') {
+                isBold = !isBold;
+                document.getElementById('btnBold').classList.toggle('bg-sky-100', isBold);
+                document.getElementById('btnBold').classList.toggle('text-sky-700', isBold);
+            } else if (type === 'italic') {
+                isItalic = !isItalic;
+                document.getElementById('btnItalic').classList.toggle('bg-sky-100', isItalic);
+                document.getElementById('btnItalic').classList.toggle('text-sky-700', isItalic);
+            }
+        }
+
+        function applyZoomTransform() {
+            const stage = document.getElementById('zoomStage');
+            stage.style.transform = `scale(${activeZoom})`;
+            document.getElementById('zoomPercentDisplay').textContent = `${Math.round(activeZoom * 100)}%`;
+        }
+
+        function setExplicitZoom(val) {
+            activeZoom = Math.min(Math.max(val, 0.4), 2.5);
+            applyZoomTransform();
+        }
+
+        function stepZoom(delta) {
+            activeZoom = Math.min(Math.max(activeZoom + delta, 0.4), 2.5);
+            applyZoomTransform();
+        }
+
+        function changeFontSize(delta) {
+            currentFontSize = Math.max(currentFontSize + delta, 6);
+            document.getElementById('fontSizeDisplay').textContent = currentFontSize;
+        }
+
+        function handleColorChange(colorHex) {
+            currentTextColor = colorHex;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('btnEditMode').classList.toggle('active', mode === 'edit');
+            document.getElementById('btnInsertMode').classList.toggle('active', mode === 'insert');
+        }
+
+        function processFileUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            input.value = '';
+
+            document.getElementById('documentTitle').value = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('uploadSection').classList.add('hidden');
+            showLoader("Converting document and rendering canvas...");
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/api/pdf/prepare-edit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(async res => {
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || "Failed to process document");
+                return data;
+            })
+            .then(data => {
+                hideLoader();
+                currentSessionId = data.session_id;
+                renderDocumentCanvas(data.pages);
+                document.getElementById('studioControls').classList.remove('hidden');
+                document.getElementById('editorViewportArea').classList.remove('hidden');
+            })
+            .catch(err => {
+                hideLoader();
+                document.getElementById('uploadSection').classList.remove('hidden');
+                alert("Import Error: " + err.message);
+            });
+        }
+
+        function renderDocumentCanvas(pages) {
+            const stage = document.getElementById('zoomStage');
+            stage.innerHTML = '';
+            pages.forEach(page => appendPageToStage(page));
+        }
+
+        function appendPageToStage(page) {
+            const stage = document.getElementById('zoomStage');
+            const sheet = document.createElement('div');
+            sheet.className = 'studio-canvas-sheet';
+            sheet.id = `page_sheet_${page.page_number}`;
+            sheet.style.width = page.width + 'px';
+            sheet.style.height = page.height + 'px';
+
+            const img = document.createElement('img');
+            img.className = 'sheet-bg-image';
+            img.src = 'data:image/png;base64,' + page.image_base64;
+            sheet.appendChild(img);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'sheet-interactive-layer';
+
+            (page.text_blocks || []).forEach(block => {
+                const [x0, y0, x1, y1] = block.bbox;
+                const width = Math.max(x1 - x0, 10);
+                const height = Math.max(y1 - y0, 8);
+
+                const hitBox = document.createElement('div');
+                hitBox.className = 'text-target-box';
+                hitBox.style.left = x0 + 'px';
+                hitBox.style.top = y0 + 'px';
+                hitBox.style.width = width + 'px';
+                hitBox.style.height = height + 'px';
+
+                hitBox.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openInlineEditor(overlay, hitBox, block, page.page_number, x0, y0, width, height);
+                });
+
+                overlay.appendChild(hitBox);
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target !== overlay) return;
+                if (currentMode === 'insert') {
+                    const rect = overlay.getBoundingClientRect();
+                    const clickX = (e.clientX - rect.left) / activeZoom;
+                    const clickY = (e.clientY - rect.top) / activeZoom;
+                    insertFreeText(overlay, page.page_number, clickX, clickY, page.text_blocks);
+                }
+            });
+
+            sheet.appendChild(overlay);
+            stage.appendChild(sheet);
+        }
+
+        function requestAddNewPage() {
+            if (!currentSessionId) return;
+            showLoader("Adding new page...");
+
+            fetch('/api/pdf/add-page', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: currentSessionId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                hideLoader();
+                if (data.success && data.page) {
+                    appendPageToStage(data.page);
+                } else {
+                    alert(data.error || "Failed to add page");
+                }
+            })
+            .catch(err => {
+                hideLoader();
+                alert("Error adding page: " + err.message);
+            });
+        }
+
+        function openInlineEditor(overlay, hitBox, block, pageNumber, x0, y0, width, height) {
+            hitBox.style.display = 'none';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'studio-live-input';
+            input.value = block.text;
+            
+            input.style.left = x0 + 'px';
+            input.style.top = y0 + 'px';
+            input.style.width = Math.max(width, 35) + 'px';
+            input.style.height = height + 'px';
+            input.style.fontSize = block.font_size + 'px';
+            input.style.color = currentTextColor;
+            if (isBold) input.style.fontWeight = 'bold';
+            if (isItalic) input.style.fontStyle = 'italic';
+
+            overlay.appendChild(input);
+            input.focus();
+            input.select();
+
+            input.addEventListener('input', function() {
+                this.style.width = Math.max(this.scrollWidth + 4, width) + 'px';
+            });
+
+            input.addEventListener('blur', function() {
+                const updatedVal = this.value;
+                input.remove();
+
+                if (updatedVal !== block.text && updatedVal.trim() !== '') {
+                    const adjustedWidth = Math.max(input.offsetWidth, width);
+                    modifiedEdits[block.block_id] = {
+                        page_number: pageNumber,
+                        bbox: [x0, y0, x0 + adjustedWidth, y0 + height],
+                        font_size: block.font_size,
+                        color: currentTextColor,
+                        new_text: updatedVal
+                    };
+                    renderModifiedPatch(overlay, hitBox, block, pageNumber, x0, y0, adjustedWidth, height, updatedVal);
+                } else {
+                    hitBox.style.display = 'block';
+                    delete modifiedEdits[block.block_id];
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') this.blur();
+            });
+        }
+
+        function renderModifiedPatch(overlay, hitBox, block, pageNumber, x0, y0, width, height, newText) {
+            const patch = document.createElement('div');
+            patch.className = 'studio-text-patch';
+            patch.textContent = newText;
+            patch.style.left = x0 + 'px';
+            patch.style.top = y0 + 'px';
+            patch.style.width = width + 'px';
+            patch.style.height = height + 'px';
+            patch.style.fontSize = block.font_size + 'px';
+            patch.style.color = currentTextColor;
+            if (isBold) patch.style.fontWeight = 'bold';
+            if (isItalic) patch.style.fontStyle = 'italic';
+
+            const delBtn = document.createElement('div');
+            delBtn.className = 'delete-cross';
+            delBtn.innerHTML = '×';
+            delBtn.title = "Revert to original text";
+            delBtn.onclick = function(e) {
+                e.stopPropagation();
+                patch.remove();
+                hitBox.style.display = 'block';
+                delete modifiedEdits[block.block_id];
+            };
+            patch.appendChild(delBtn);
+
+            patch.addEventListener('click', function(e) {
+                e.stopPropagation();
+                patch.remove();
+                openInlineEditor(overlay, hitBox, block, pageNumber, x0, y0, width, height);
+            });
+
+            overlay.appendChild(patch);
+        }
+
+        function insertFreeText(overlay, pageNumber, x, y, textBlocks, existingId = null, existingText = "") {
+            let matchedFontSize = currentFontSize;
+            let targetY = y;
+
+            if (textBlocks && textBlocks.length > 0) {
+                let closest = null;
+                let minDist = 999999;
+                textBlocks.forEach(b => {
+                    const bx = b.bbox[0];
+                    const by = b.bbox[1];
+                    const dist = Math.hypot(bx - x, by - y);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = b;
+                    }
+                });
+
+                if (closest && minDist < 45) {
+                    matchedFontSize = Math.round(closest.font_size);
+                    targetY = closest.bbox[1];
+                }
+            }
+
+            const boxId = existingId || `custom_${Date.now()}`;
+            const inputHeight = matchedFontSize * 1.05;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'studio-live-input';
+            input.value = existingText;
+            input.placeholder = 'Type...';
+            input.style.left = x + 'px';
+            input.style.top = targetY + 'px';
+            input.style.height = inputHeight + 'px';
+            input.style.fontSize = matchedFontSize + 'px';
+            input.style.color = currentTextColor;
+            input.style.minWidth = '50px';
+
+            overlay.appendChild(input);
+            input.focus();
+
+            input.addEventListener('input', function() {
+                this.style.width = Math.max(this.scrollWidth + 4, 50) + 'px';
+            });
+
+            input.addEventListener('blur', function() {
+                const val = this.value.trim();
+                input.remove();
+
+                if (!val) {
+                    delete newCustomTexts[boxId];
+                    return;
+                }
+
+                newCustomTexts[boxId] = {
+                    id: boxId,
+                    page_number: pageNumber,
+                    x: x,
+                    y: targetY,
+                    text: val,
+                    font_size: matchedFontSize,
+                    color: currentTextColor
+                };
+
+                renderCustomTextPatch(overlay, pageNumber, x, targetY, matchedFontSize, inputHeight, val, boxId, textBlocks);
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') this.blur();
+            });
+        }
+
+        function renderCustomTextPatch(overlay, pageNumber, x, y, fontSize, height, text, boxId, textBlocks) {
+            const patch = document.createElement('div');
+            patch.className = 'studio-text-patch';
+            patch.textContent = text;
+            patch.style.left = x + 'px';
+            patch.style.top = y + 'px';
+            patch.style.height = height + 'px';
+            patch.style.fontSize = fontSize + 'px';
+            patch.style.color = currentTextColor;
+
+            const delBtn = document.createElement('div');
+            delBtn.className = 'delete-cross';
+            delBtn.innerHTML = '×';
+            delBtn.title = "Delete";
+            delBtn.onclick = function(e) {
+                e.stopPropagation();
+                patch.remove();
+                delete newCustomTexts[boxId];
+            };
+            patch.appendChild(delBtn);
+
+            patch.addEventListener('click', function(e) {
+                e.stopPropagation();
+                patch.remove();
+                insertFreeText(overlay, pageNumber, x, y, textBlocks, boxId, text);
+            });
+
+            overlay.appendChild(patch);
+        }
+
+        function handleImageUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const b64 = e.target.result;
+                const activeOverlay = document.querySelector('.sheet-interactive-layer');
+                if (!activeOverlay) {
+                    alert("Please upload a document first.");
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'media-item-box';
+                wrapper.style.left = '50px';
+                wrapper.style.top = '50px';
+                wrapper.style.width = '120px';
+                wrapper.style.height = '120px';
+
+                const img = document.createElement('img');
+                img.src = b64;
+                wrapper.appendChild(img);
+
+                const delBtn = document.createElement('div');
+                delBtn.className = 'delete-cross';
+                delBtn.innerHTML = '×';
+                delBtn.onclick = function(ev) {
+                    ev.stopPropagation();
+                    wrapper.remove();
+                    insertedImages = insertedImages.filter(i => i.element !== wrapper);
+                };
+                wrapper.appendChild(delBtn);
+
+                enableElementDrag(wrapper);
+                activeOverlay.appendChild(wrapper);
+
+                insertedImages.push({
+                    page_number: 0,
+                    element: wrapper,
+                    image_base64: b64
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function enableElementDrag(el) {
+            let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+            el.onmousedown = function(e) {
+                if (e.target.classList.contains('delete-cross')) return;
+                e.preventDefault();
+                p3 = e.clientX;
+                p4 = e.clientY;
+                document.onmouseup = function() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                };
+                document.onmousemove = function(ev) {
+                    ev.preventDefault();
+                    p1 = p3 - ev.clientX;
+                    p2 = p4 - ev.clientY;
+                    p3 = ev.clientX;
+                    p4 = ev.clientY;
+                    el.style.top = (el.offsetTop - p2 / activeZoom) + "px";
+                    el.style.left = (el.offsetLeft - p1 / activeZoom) + "px";
+                };
+            };
+        }
+
+        function downloadFinalPdf() {
+            const editsList = Object.values(modifiedEdits);
+            const customList = Object.values(newCustomTexts);
+            const mediaList = insertedImages.map(m => {
+                const el = m.element;
+                const x0 = parseFloat(el.style.left);
+                const y0 = parseFloat(el.style.top);
+                return {
+                    page_number: m.page_number,
+                    bbox: [x0, y0, x0 + el.offsetWidth, y0 + el.offsetHeight],
+                    image_base64: m.image_base64
+                };
+            });
+
+            if (editsList.length === 0 && customList.length === 0 && mediaList.length === 0) {
+                alert("No changes made. Please edit or add text before downloading.");
+                return;
+            }
+
+            showLoader("Applying changes and generating PDF...");
+
+            fetch('/api/pdf/apply-edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: currentSessionId,
+                    edits: editsList,
+                    new_texts: customList,
+                    images: mediaList
+                })
+            })
+            .then(async res => {
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || "Failed to generate PDF");
+                }
+                return res.blob();
+            })
+            .then(blob => {
+                hideLoader();
+                const title = document.getElementById('documentTitle').value || 'edited_document';
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${title}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => {
+                hideLoader();
+                alert("Export Failed: " + err.message);
+            });
+        }
+
+        function showLoader(msg) {
+            document.getElementById('processingStatusText').textContent = msg;
+            document.getElementById('processingModal').classList.remove('hidden');
+        }
+
+        function hideLoader() {
+            document.getElementById('processingModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
