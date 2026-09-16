@@ -5,7 +5,7 @@ pdf2docx==0.5.8
 img2pdf==0.5.1
 openpyxl==3.1.2
 reportlab==4.1.0
-PyMuPDF==1.24.1
+PyMuPDF==1.24.8
 pytesseract==0.3.10
 opencv-python-headless==4.9.0.80
 pillow==10.2.0
