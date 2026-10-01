@@ -8,6 +8,6 @@ reportlab==4.1.0
 pymupdf==1.26.6
 pytesseract==0.3.10
 opencv-python-headless==4.9.0.80
-pillow==10.2.0
+pillow==11.1.0
 numpy==1.26.4
 gunicorn==21.2.0
