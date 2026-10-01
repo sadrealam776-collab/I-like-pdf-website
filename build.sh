@@ -4,8 +4,8 @@ set -o errexit
 # Upgrade pip, setuptools, and wheel
 python -m pip install --upgrade pip setuptools wheel
 
-# Install system dependencies
+# Install system-level Tesseract-OCR
 apt-get update && apt-get install -y tesseract-ocr
 
-# Install Python requirements with binary preference
-pip install --prefer-binary -r requirements.txt
+# Force pip to use pre-built binary wheels only (prevents C++ compilation failure)
+pip install --only-binary=:all: -r requirements.txt
