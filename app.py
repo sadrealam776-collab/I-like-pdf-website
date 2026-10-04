@@ -18,7 +18,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 from datetime import datetime
 import fitz  # PyMuPDF
-
 app = Flask(__name__)
 
 # Base working directories
