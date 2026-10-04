@@ -18,7 +18,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 from datetime import datetime
 import fitz  # PyMuPDF
-import pytesseract
 
 app = Flask(__name__)
 
