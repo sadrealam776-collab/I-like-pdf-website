@@ -6,6 +6,7 @@ import base64
 import subprocess
 import cv2
 import numpy as np
+import pytesseract
 from PIL import Image, ImageEnhance
 from flask import Flask, request, jsonify, send_file, make_response, send_from_directory, after_this_request
 from werkzeug.utils import secure_filename
@@ -18,6 +19,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
 from datetime import datetime
 import fitz  # PyMuPDF
+
 app = Flask(__name__)
 
 # Base working directories
@@ -524,7 +526,6 @@ def api_unlock_without_password():
 
         if reader.is_encrypted:
             decrypted = False
-            # List of common automated fallback keys or empty passwords
             fallback_passwords = ["", " ", "1234", "0000"]
             
             for k in fallback_passwords:
@@ -535,7 +536,6 @@ def api_unlock_without_password():
                 except Exception:
                     pass
             
-            # If standard fallback keys fail, check if user sent a password via form request
             if not decrypted:
                 form_password = request.form.get('password', '')
                 if form_password:
@@ -547,7 +547,7 @@ def api_unlock_without_password():
 
             if not decrypted:
                 return jsonify({
-                    "error": "This PDF is encrypted with a user password (such as a salary slip or bank statement security lock). Please use the standard 'Unlock PDF' tool with the correct password."
+                    "error": "This PDF is encrypted with a user password. Please use the standard 'Unlock PDF' tool."
                 }), 400
 
         for p in reader.pages: 
@@ -595,7 +595,7 @@ def api_protect_pdf():
         w.write(buf)
         buf.seek(0)
         return send_file(buf, mimetype='application/pdf', as_attachment=True, download_name='protected.pdf')
-    except Exception as e: return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 400
 
 
 @app.route('/api/pdf-to-word', methods=['POST'])
